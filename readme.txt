@@ -25,19 +25,6 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 * Wordking great with cutom widget area
 * Unlimited filters by product attributes
 
-= Next Release ( 1.1.0 ) =
-
-Features:
-
-* "No stockists" text editable in admin
-* Stockists search page template. Admin can create a page and select as a template Stockists Search Page. There will be
- postcode search option, limit by radius, keyword, category.
-* "Premium Marker icon URL" for categories.
-* CSS class for premium stockists. This will provide option to add styles for Premium Stockists
-* Adding filters and actions for developers
-
-Changes:
-
 == Installation ==
 
 1. Install WooCommerce AJAX Filters either via the WordPress.org plugin directory, or by uploading the files to your server
