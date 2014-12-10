@@ -287,7 +287,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 	 * Widget ajax listener
 	 */
 	public static function listener(){
-		$attributes_terms = $tax_query = [];
+		$attributes_terms = $tax_query = array();
 		
 		$attributes = self::get_attributes();
 		if( @$attributes ) {
@@ -395,7 +395,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 	}
 	
 	function get_product_categories( $current_product_cat = '' ) {
-		$args            = array(
+		$args = array(
 			'pad_counts'         => 1,
 			'show_counts'        => 1,
 			'hierarchical'       => 1,
