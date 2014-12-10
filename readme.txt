@@ -1,5 +1,5 @@
-=== Advanced AJAX Product Filters for WooCommerce ===
-Plugin Name: Advanced AJAX Product Filters for WooCommerce
+=== Advanced AJAX Product Filters ===
+Plugin Name: Advanced AJAX Product Filters
 Contributors: dholovnia, BeRocket
 Donate link: http://berocket.com
 Tags: filters, product filters, ajax product filters, advanced product filters, woocommerce filters, woocommerce product filters, woocommerce ajax product filters
