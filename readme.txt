@@ -41,4 +41,5 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 
 == Changelog ==
 
+1.0.2 - better support for older PHP versions 
 1.0.1 is the first public version
