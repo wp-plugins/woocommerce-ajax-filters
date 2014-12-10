@@ -2,7 +2,7 @@
 Plugin Name: Advanced AJAX Product Filters for WooCommerce
 Contributors: dholovnia, BeRocket
 Donate link: http://berocket.com
-Tags: filters, product filters, ajax product filters, advanced product filters, woocommerce filters, woocommerce product filters
+Tags: filters, product filters, ajax product filters, advanced product filters, woocommerce filters, woocommerce product filters, woocommerce ajax product filters
 Requires at least: 3.9
 Tested up to: 4.0.1
 Stable tag: trunk
