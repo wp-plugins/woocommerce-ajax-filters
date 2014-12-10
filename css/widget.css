@@ -1,0 +1,154 @@
+ul.products{
+	position: relative;
+	min-height: 500px;
+}
+
+ul.products.hide_products li{
+	visibility: hidden;
+	height: 20px;
+}
+
+.berocket_aapf_widget input[type="checkbox"] {
+    position: absolute;
+    left: -9999px;
+}
+
+.berocket_aapf_widget input[type="checkbox"] + label:before {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: url('../images/sprite.png') no-repeat;
+}
+
+.berocket_aapf_widget input[type="checkbox"]:checked + label:before {
+    background-position: -14px 0;
+}
+
+.berocket_aapf_widget input[type="radio"] {
+    position: absolute;
+    left: -9999px;
+}
+
+.berocket_aapf_widget input[type="radio"] + label:before {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: url('../images/sprite_radio.png') no-repeat;
+}
+
+.berocket_aapf_widget input[type="radio"]:checked + label:before {
+    background-position: -14px 0;
+}
+
+.berocket_aapf_widget-title{
+	margin-bottom: 5px;
+	font-size: 14px;
+}
+
+ul.berocket_aapf_widget{
+	margin-bottom: 30px;
+}
+
+ul.berocket_aapf_widget li{
+	list-style-type: none;
+	padding-left: 0;
+}
+
+ul.berocket_aapf_widget li > span{
+	display: block;
+	cursor: pointer;
+	height: 20px;
+}
+
+ul.berocket_aapf_widget li > span:hover{
+	color: #000000;
+}
+
+.berocket_aapf_widget_loading{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: white url('../images/ajax-loader.gif') no-repeat center center;
+	z-index: 10000;
+}
+
+.no-products{
+	font-size: 26px;
+	font-weight: bold;
+	line-height: 6em;
+	text-align: center;
+}
+
+span.product-size{
+	color: #777;
+	display: block;
+	font-family: Arial;
+	text-align: center;
+}
+
+.berocket_aapf_widget li.slider span.left, .berocket_aapf_widget li.slider span.right{
+	height: 40px;
+	float: left;
+	font-size: 12px;
+}
+
+.berocket_aapf_widget li.slider span.left input, .berocket_aapf_widget li.slider span.right input{
+	border: 1px solid #E8E8E8;
+	font-family: Arial;
+	font-size: 13px;
+	font-style: italic;
+	padding: 4px 9px;
+	text-align: right;
+	width: 40px;
+    background: white;
+}
+
+.berocket_aapf_widget li.slider{
+	width: 80%;
+}
+
+.berocket_aapf_widget li.slider span.right{
+	float: right;
+}
+
+.berocket_aapf_widget li.slider span.slide{
+	clear: both;
+	height: auto;
+}
+
+.berocket_filter_slider.ui-widget-content, .berocket_filter_price_slider.ui-widget-content{
+	background: none repeat scroll 0 0 #b0b5b9;
+	border: 0 none;
+	border-radius: 0;
+	height: 4px;
+	padding: 0;
+}
+
+.berocket_filter_slider.ui-widget-content .ui-slider-range, .berocket_filter_price_slider.ui-widget-content .ui-slider-range{
+	background: none repeat scroll 0 0 #000000;
+}
+
+.berocket_filter_slider.ui-widget-content  .ui-slider-handle, .berocket_filter_price_slider.ui-widget-content  .ui-slider-handle{
+	background: url("../images/handler.png") no-repeat scroll center center / cover  transparent;
+	width: 12px;
+	height: 12px;
+	border: 0;
+	top: -4px;
+}
+
+.berocket_aapf_widget .converter{
+	text-align: center;
+}
+
+.berocket_aapf_widget .converter a{
+	text-decoration: underline;
+}
+
+.berocket_aapf_widget .converter a.active{
+	text-decoration: none;
+	color: #ccc;
+}
