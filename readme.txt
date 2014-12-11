@@ -25,6 +25,39 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 * Working great with custom widget area
 * Unlimited filters by product attributes
 
+
+
+= How It Works: =
+
+= Step 1: =
+* First you need to add attributes to the products ( WooCommerce plugin should be installed and activated already )
+* Go to Admin area -> Products -> Attributes and add attributes your products will have, add them all
+* Click attribute's name where type is select and add values to it. Predefine product options
+* Go to your products and add attributes to each of them
+
+= Step 2: =
+* Install and activate plugin
+* Go to Admin area -> Appearance -> Widgets
+* In Available Widgets ( left side of the screen ) find Product Filters
+* Drag it to Sidebar you choose for it
+* Enter title, choose attribute that will be used for filtering products, choose filter type,
+ choose operator( whether product should have all selected values (AND) or one of them (OR) ),
+* Click save and go to your shop to check how it work.
+* That's it =)
+
+= Additional widget have Advanced Settings: =
+
+* Product Category - if you want to pin your filter to one category of the product this is good place to do it.
+ Eg. You selling Phones and Cases for them. If user choose Category "Phones" filter "Have Wi-Fi" will appear
+ but if user will choose "Cases" it will not be there as Admin set that "Have Wi-Fi" filter will be visible only on
+ "Phones" category.
+* Filter Box Height - if your filter have too much options it is nice to limit height of the filter to not prolong
+ the page too much. Scroll will appear.
+* Scroll theme - if "Filter Box Height" is set and box length is more than "Filter Box Height" scroll appear and
+ how it looks depends on the theme you choose.
+
+
+
 == Installation ==
 
 1. Install WooCommerce AJAX Filters either via the WordPress.org plugin directory, or by uploading the files to your server
