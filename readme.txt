@@ -45,7 +45,7 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 * Click save and go to your shop to check how it work.
 * That's it =)
 
-= Additional widget have Advanced Settings: =
+= Advanced Settings (Widget area): =
 
 * Product Category - if you want to pin your filter to one category of the product this is good place to do it.
  Eg. You selling Phones and Cases for them. If user choose Category "Phones" filter "Have Wi-Fi" will appear
