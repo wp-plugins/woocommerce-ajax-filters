@@ -21,8 +21,8 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 * Slider, radio or checkbox
 * No spamming with widgets in admin, 1 widget - multiple instances
 * Filter visibility by product category. Different categories pages = different ( + global ) filters. One shop for everything
-* Filter box height limit with scroller themes added
-* Wordking great with cutom widget area
+* Filter box height limit with scroll themes
+* Working great with custom widget area
 * Unlimited filters by product attributes
 
 == Installation ==
