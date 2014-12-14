@@ -57,6 +57,18 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 
 
 
+
+= Next Release ( 1.1.0 ) =
+
+= Features: =
+* New type Image. Admin can upload image to select and deselect before/instead of text
+* Option to add icons before/after option text
+* Option to take control over (default) sorting function, make it AJAXy and work with filters
+
+= Changes: =
+* Optimize and then Refactor the code
+
+
 == Installation ==
 
 1. Install WooCommerce AJAX Filters either via the WordPress.org plugin directory, or by uploading the files to your server
