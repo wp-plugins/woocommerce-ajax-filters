@@ -45,6 +45,9 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 * Click save and go to your shop to check how it work.
 * That's it =)
 
+
+
+
 = Advanced Settings (Widget area): =
 
 * Product Category - if you want to pin your filter to one category of the product this is good place to do it.
@@ -56,6 +59,18 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 * Scroll theme - if "Filter Box Height" is set and box length is more than "Filter Box Height" scroll appear and
  how it looks depends on the theme you choose.
 
+
+
+
+= Next Release ( 1.1.0 ) =
+
+= Features: =
+* New type Image. Admin can upload image to select and deselect before/instead of text
+* Option to add icons before/after option text
+* Option to take control over (default) sorting function, make it AJAXy and work with filters
+
+= Changes: =
+* Optimize and then Refactor the code
 
 
 == Installation ==
