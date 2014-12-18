@@ -139,16 +139,3 @@ span.product-size{
 	border: 0;
 	top: -4px;
 }
-
-.berocket_aapf_widget .converter{
-	text-align: center;
-}
-
-.berocket_aapf_widget .converter a{
-	text-decoration: underline;
-}
-
-.berocket_aapf_widget .converter a.active{
-	text-decoration: none;
-	color: #ccc;
-}
