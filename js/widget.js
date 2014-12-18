@@ -1,7 +1,9 @@
 (function ($){
 	$(document).ready(function (){
 		
-		var berocket_aapf_widget_product_filters = [];
+		var berocket_aapf_widget_product_filters = [],
+            berocket_aapf_widget_product_limits = [],
+            berocket_aapf_widget_product_price_limit = [];
 		function updateProducts( $el ){
 			$('ul.products').addClass('hide_products').append('<div class="berocket_aapf_widget_loading" />');
 			
@@ -21,20 +23,20 @@
 					});
 				}
 			}
-			
-			if( $('.berocket_filter_slider').hasClass('berocket_filter_slider') ){
-				var berocket_aapf_widget_product_limits = [];
-				$('.berocket_filter_slider').each(function (i,o){
+
+			$t = $('.berocket_filter_slider');
+			if( $t.hasClass('berocket_filter_slider') ){
+                $t.each(function (i,o){
 					val1 = $('#'+$(o).data('fields_1')).val();
 					val2 = $('#'+$(o).data('fields_2')).val();
 					berocket_aapf_widget_product_limits[berocket_aapf_widget_product_limits.length] = [$(o).data('taxonomy'), val1, val2];
 				});
 			}
-			
-			if( $('.berocket_filter_price_slider').hasClass('berocket_filter_price_slider') ){
-				val1 = $('#'+$('.berocket_filter_price_slider').data('fields_1')).val();
-				val2 = $('#'+$('.berocket_filter_price_slider').data('fields_2')).val();
-				var berocket_aapf_widget_product_price_limit = [val1, val2];
+			$d = $('.berocket_filter_price_slider');
+			if( $d.hasClass('berocket_filter_price_slider') ){
+				val1 = $('#'+$d.data('fields_1')).val();
+				val2 = $('#'+$d.data('fields_2')).val();
+				berocket_aapf_widget_product_price_limit = [val1, val2];
 			}
 			
 			$.post( the_ajax_script.ajaxurl, { terms: berocket_aapf_widget_product_filters, price: berocket_aapf_widget_product_price_limit, limits: berocket_aapf_widget_product_limits, product_cat: the_ajax_script.product_cat, action: 'berocket_aapf_listener' }, function (data){
@@ -59,7 +61,7 @@
 					$( '#'+$o.data('fields_1') ).val( ui.values[0] );
 					$( '#'+$o.data('fields_2') ).val( ui.values[1] );
 				},
-				stop: function( event, ui ){
+				stop: function(){
 					updateProducts( false );
 				}
 			}); 
@@ -92,4 +94,4 @@
 		})
 		
 	});
-})(jQuery)
+})(jQuery);

@@ -19,6 +19,7 @@ ul.products.hide_products li{
     width: 14px;
     height: 14px;
     background: url('../images/sprite.png') no-repeat;
+    cursor: pointer;
 }
 
 .berocket_aapf_widget input[type="checkbox"]:checked + label:before {
@@ -86,7 +87,6 @@ ul.berocket_aapf_widget li > span:hover{
 span.product-size{
 	color: #777;
 	display: block;
-	font-family: Arial;
 	text-align: center;
 }
 
@@ -98,7 +98,6 @@ span.product-size{
 
 .berocket_aapf_widget li.slider span.left input, .berocket_aapf_widget li.slider span.right input{
 	border: 1px solid #E8E8E8;
-	font-family: Arial;
 	font-size: 13px;
 	font-style: italic;
 	padding: 4px 9px;
@@ -132,10 +131,74 @@ span.product-size{
 	background: none repeat scroll 0 0 #000000;
 }
 
-.berocket_filter_slider.ui-widget-content  .ui-slider-handle, .berocket_filter_price_slider.ui-widget-content  .ui-slider-handle{
+.berocket_filter_slider.ui-widget-content .ui-slider-handle, .berocket_filter_price_slider.ui-widget-content .ui-slider-handle{
 	background: url("../images/handler.png") no-repeat scroll center center / cover  transparent;
 	width: 12px;
 	height: 12px;
 	border: 0;
 	top: -4px;
+}
+
+.ui-slider {
+    position: relative;
+    text-align: left;
+}
+.ui-slider .ui-slider-handle {
+    position: absolute;
+    z-index: 2;
+    width: 1.2em;
+    height: 1.2em;
+    cursor: pointer;
+    -ms-touch-action: none;
+    touch-action: none;
+}
+.ui-slider .ui-slider-range {
+    position: absolute;
+    z-index: 1;
+    font-size: .7em;
+    display: block;
+    border: 0;
+    background-position: 0 0;
+}
+.ui-slider.ui-state-disabled .ui-slider-handle,
+.ui-slider.ui-state-disabled .ui-slider-range {
+    filter: inherit;
+}
+
+.ui-slider-horizontal {
+    height: .8em;
+}
+.ui-slider-horizontal .ui-slider-handle {
+    top: -.3em;
+    margin-left: -.6em;
+}
+.ui-slider-horizontal .ui-slider-range {
+    top: 0;
+    height: 100%;
+}
+.ui-slider-horizontal .ui-slider-range-min {
+    left: 0;
+}
+.ui-slider-horizontal .ui-slider-range-max {
+    right: 0;
+}
+
+.ui-slider-vertical {
+    width: .8em;
+    height: 100px;
+}
+.ui-slider-vertical .ui-slider-handle {
+    left: -.3em;
+    margin-left: 0;
+    margin-bottom: -.6em;
+}
+.ui-slider-vertical .ui-slider-range {
+    left: 0;
+    width: 100%;
+}
+.ui-slider-vertical .ui-slider-range-min {
+    bottom: 0;
+}
+.ui-slider-vertical .ui-slider-range-max {
+    top: 0;
 }

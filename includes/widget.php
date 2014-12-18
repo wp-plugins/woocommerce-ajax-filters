@@ -38,7 +38,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 		if( !is_shop() and !is_product_category() ) return;
 		global $wp_query;
         
-        wp_register_style( 'berocket_aapf_widget-style', plugins_url('../css/widget.css', __FILE__) );
+        wp_register_style( 'berocket_aapf_widget-style', plugins_url('../css/widget.min.css', __FILE__) );
         wp_enqueue_style( 'berocket_aapf_widget-style' );
 
         /* custom scrollbar */
@@ -48,10 +48,8 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 
 		wp_enqueue_script( 'jquery-ui-core' );
 		wp_enqueue_script( 'jquery-ui-slider' );
-		wp_enqueue_script( 'berocket_aapf_widget-script', plugins_url('../js/widget.js', __FILE__), array('jquery') );
-		wp_enqueue_script( 'berocket_aapf_widget-hack-script', plugins_url('../js/hack.js', __FILE__), array('jquery') );
-		wp_register_style( 'berocket_aapf_widget-ui-style', plugins_url('../css/jquery-ui.css', __FILE__) );
-		wp_enqueue_style( 'berocket_aapf_widget-ui-style' );
+		wp_enqueue_script( 'berocket_aapf_widget-script', plugins_url('../js/widget.min.js', __FILE__), array('jquery') );
+		wp_enqueue_script( 'berocket_aapf_widget-hack-script', plugins_url('../js/mobiles.min.js', __FILE__), array('jquery') );
         
         $wp_query_product_cat = '-1';
         if( @$wp_query->query['product_cat'] )

@@ -71,6 +71,9 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 
 = Changes: =
 * Optimize and then Refactor the code
+* Minimize CSS and JavaScript files
+* Plugin return woocommerce' default structure for product. This MUST be changed because if site has other product html
+  structure after using any filter page will look broken.
 
 
 == Installation ==
@@ -89,5 +92,8 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 
 == Changelog ==
 
-* 1.0.2 - better support for older PHP versions
+* 1.1.0
+    - CSS and JavaScript files minimized
+* 1.0.2
+    - better support for older PHP versions
 * 1.0.1 is the first public version
