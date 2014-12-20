@@ -88,81 +88,49 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 		}
 		
 		if( !$scroll_theme ) $scroll_theme = 'dark';
-		
-		
-		echo '<h3 class="widget-title berocket_aapf_widget-title">'.$title.'</h3>';
-		echo "<ul class='berocket_aapf_widget {$class}' {$style} data-scroll_theme='{$scroll_theme}'>";
-		if( $type == 'checkbox' ){
-			foreach( $terms as $term )
-				echo "
-					<li data-term_id='{$term->term_id}' data-taxonomy='{$term->taxonomy}' data-operator='{$operator}'>
-						<span>
-							<input type='checkbox' id='radio_{$term->term_id}' /><label for='radio_{$term->term_id}'> {$term->name}</label>
-						</span>
-					</li>
-				";
-		}
-		if( $type == 'radio' ){
-			$x = time();
-			foreach( $terms as $term )
-				echo "
-					<li data-term_id='{$term->term_id}' data-taxonomy='{$term->taxonomy}' data-operator='{$operator}'>
-						<span>
-							<input type='radio' id='radio_{$term->term_id}' name='radio_{$term->taxonomy}_{$x}' /><label for='radio_{$term->term_id}'> {$term->name}</label>
-						</span>
-					</li>
-				";
-		}
-		if( $type == 'select' ){
-			echo "<li>
-					<span>
-						<select>
-							<option value=''>Any</option>";
-				foreach( $terms as $term )
-					echo "<option data-term_id='{$term->term_id}' data-taxonomy='{$term->taxonomy}' data-operator='{$operator}'>{$term->name}</option>";
-				echo "</select>
-					</span>
-				</li>";
-		}
+
+		set_query_var( 'terms', $terms );
+		set_query_var( 'operator', $operator );
+		set_query_var( 'title', $title );
+		set_query_var( 'class', $class );
+		set_query_var( 'style', $style );
+		set_query_var( 'scroll_theme', $scroll_theme );
+		set_query_var( 'x', time() );
+
+		// widget title and start tag ( <ul> ) can be found in templates/widget_start.php
+		br_get_template_part('widget_start');
+
 		if( $type == 'slider' ){
+			$min = $max = false;
+			$main_class = 'slider';
+			$slider_class = 'berocket_filter_slider';
+
 			if( $attribute == 'price' ){
-				$min = $max = false;
 				foreach( $price_range as $price ){
 					if( $min === false or $min > (int) $price ) $min = $price;
 					if( $max === false or $max < (int) $price ) $max = $price;
 				}
-				$ident = rand( 0, time() );
-				echo "<li class='slider price'>
-						<span class='left'>
-							<input type='text' disabled id='text_{$ident}_1' value='".number_format(floor($min), 2, '.', '')."' /><label for='text_{$ident}_1'>
-						</span>
-						<span class='right'>
-							<input type='text' disabled id='text_{$ident}_2' value='".number_format(ceil($max), 2, '.', '')."' /><label for='text_{$ident}_2'>
-						</span>
-						<span class='slide'>
-							<div class='berocket_filter_price_slider' data-taxonomy='{$ident}' data-min='".number_format(floor($min), 2, '.', '')."' data-max='".number_format(ceil($max), 2, '.', '')."' data-fields_1='text_{$ident}_1' data-fields_2='text_{$ident}_2'></div>
-						</span>
-					</li>";
+				$id = rand( 0, time() );
+				$slider_class = 'berocket_filter_price_slider';
+				$main_class .= ' price';
 			}else{
-				$min = $max = false;
 				foreach( $terms as $term ){
 					if( $min === false or $min > (int) $term->slug ) $min = $term->slug;
 					if( $max === false or $max < (int) $term->slug ) $max = $term->slug;
 				}
-				echo "<li class='slider'>
-						<span class='left'>
-							<input type='text' disabled id='text_{$term->taxonomy}_1' value='{$min}' /><label for='text_{$term->taxonomy}_1'> <span class='units'>in</span></label>
-						</span>
-						<span class='right'>
-							<input type='text' disabled id='text_{$term->taxonomy}_2' value='{$max}' /><label for='text_{$term->taxonomy}_2'> <span class='units'>in</span></label>
-						</span>
-						<span class='slide'>
-							<div class='berocket_filter_slider' data-taxonomy='{$term->taxonomy}' data-curunit='in' data-min='{$min}' data-max='{$max}' data-fields_1='text_{$term->taxonomy}_1' data-fields_2='text_{$term->taxonomy}_2'></div>
-						</span>
-					</li>";
+				$id = $term->taxonomy;
 			}
+
+			set_query_var( 'id', $id );
+			set_query_var( 'main_class', $main_class );
+			set_query_var( 'slider_class', $slider_class );
+			set_query_var( 'min', number_format(floor($min), 2, '.', '') );
+			set_query_var( 'max', number_format(ceil($max), 2, '.', '') );
 		}
-		echo "</ul>";
+
+		br_get_template_part( $type );
+
+		br_get_template_part('widget_end');
 	}
 
 	/**
@@ -188,6 +156,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 		
 		return $instance;
 	}
+
 	/**
 	 * Output admin form
 	 */
@@ -206,79 +175,12 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 			'height' => 'auto',
 			'scroll_theme' => 'dark'
 		);
+
 		$instance = wp_parse_args( (array) $instance, $defaults );
-		
 		$attributes = $this->get_attributes();
-		
-		$categories = self::get_product_categories( $instance['product_cat'] )
-		?>
-		 
-		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>">Filter Title: </label>
-			<input id="<?php echo $this->get_field_id( 'title' ); ?>" type="text" name="<?php echo $this->get_field_name( 'title' ); ?>" value="<?php echo $instance['title']; ?>" />
-		</p>
-		<p>
-			<label>Attribute:
-				<select id="<?php echo $this->get_field_id( 'attribute' ); ?>" name="<?php echo $this->get_field_name( 'attribute' ); ?>" class="berocket_aapf_widget_admin_attribute_select">
-					<option <?php if ($instance['attribute'] == 'price') echo 'selected'; ?> value="price">Price</option>
-					<?php foreach( $attributes as $k => $v ){ ?>
-						<option <?php if ($instance['attribute'] == $k) echo 'selected'; ?> value="<?php echo $k ?>"><?php echo $v ?></option>
-					<?php } ?>
-				</select>
-			</label>
-		</p>
-		<p>
-			<label>Type:
-				<select id="<?php echo $this->get_field_id( 'type' ); ?>" name="<?php echo $this->get_field_name( 'type' ); ?>" class="berocket_aapf_widget_admin_type_select">
-					<? if ($instance['attribute'] != 'pa_lengthcm' and $instance['attribute'] != 'pa_widthcm' and $instance['attribute'] != 'price' ){ ?>
-						<option <?php if ($instance['type'] == 'checkbox') echo 'selected'; ?> value="checkbox">Checkbox</option>
-						<option <?php if ($instance['type'] == 'radio') echo 'selected'; ?> value="radio">Radio</option>
-						<!--<option <?php if ($instance['type'] == 'select') echo 'selected'; ?> value="select">Select</option>-->
-					<? } ?>
-					<option <?php if ($instance['type'] == 'slider') echo 'selected'; ?> value="slider">Slider</option>
-				</select>
-			</label>
-		</p>
-		<p <? if ($instance['attribute'] == 'pa_lengthcm' or $instance['attribute'] == 'pa_widthcm' or $instance['attribute'] == 'price' ) echo " style='display: none;'"; ?> >
-			<label>Operator:
-				<select id="<?php echo $this->get_field_id( 'operator' ); ?>" name="<?php echo $this->get_field_name( 'operator' ); ?>" class="berocket_aapf_widget_admin_operator_select">
-					<option <?php if ($instance['operator'] == 'AND') echo 'selected'; ?> value="AND">AND</option>
-					<option <?php if ($instance['operator'] == 'OR') echo 'selected'; ?> value="OR">OR</option>
-				</select>
-			</label>
-		</p>
-		<p>
-			<a href="#" class='berocket_aapf_advanced_settings_pointer'>Advanced Settings</a>
-		</p>
-		<div class='berocket_aapf_advanced_settings'>
-			<p>
-				<label>Product Category:
-					<select id="<?php echo $this->get_field_id( 'product_cat' ); ?>" name="<?php echo $this->get_field_name( 'product_cat' ); ?>" class="berocket_aapf_widget_admin_product_cat_select">
-						<option value="">Select Category</option>
-						<?php foreach( $categories as $category ){ ?>
-							<option <?php if ($instance['product_cat'] == $category->slug) echo 'selected'; ?> value="<?php echo $category->slug ?>"><?php echo $category->name ?></option>
-						<?php } ?>
-					</select>
-				</label>
-			</p>
-			<p>
-				<label for="<?php echo $this->get_field_id( 'height' ); ?>">Filter Box Height: </label>
-				<input id="<?php echo $this->get_field_id( 'height' ); ?>" type="text" name="<?php echo $this->get_field_name( 'height' ); ?>" value="<?php echo $instance['height']; ?>" class="berocket_aapf_widget_admin_height_input" />px
-			</p>
-			<p>
-				<label for="<?php echo $this->get_field_id( 'scroll_theme' ); ?>">Scroll Theme: </label>
-				<select id="<?php echo $this->get_field_id( 'scroll_theme' ); ?>" name="<?php echo $this->get_field_name( 'scroll_theme' ); ?>" class="berocket_aapf_widget_admin_scroll_theme_select">
-					<?php
-					$scroll_themes = array("light", "dark", "minimal", "minimal-dark", "light-2", "dark-2", "light-3", "dark-3", "light-thick", "dark-thick", "light-thin",
-					"dark-thin", "inset", "inset-dark", "inset-2", "inset-2-dark", "inset-3", "inset-3-dark", "rounded", "rounded-dark", "rounded-dots",
-					"rounded-dots-dark", "3d", "3d-dark", "3d-thick", "3d-thick-dark");
-					foreach( $scroll_themes as $theme ): ?>
-						<option <?php if ($instance['scroll_theme'] == $theme) echo 'selected'; ?>><?php echo $theme; ?></option>
-					<?php endforeach; ?>
-				</select>
-			</p>
-		</div>
-		<?php
+		$categories = self::get_product_categories( $instance['product_cat'] );
+
+		include plugin_dir_path( __DIR__ ) . "templates/admin.php";
 	}
 
 	/**
@@ -286,6 +188,8 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 	 */
 	public static function listener(){
 		$attributes_terms = $tax_query = array();
+
+		add_filter( 'post_class', array( __CLASS__, 'add_product_class' ) );
 		
 		$attributes = self::get_attributes();
 		if( @$attributes ) {
@@ -334,7 +238,6 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 		if( $query->have_posts() ){
 			while( $query->have_posts() ){
 				$query->the_post();
-				$post_thumbnail = get_the_post_thumbnail( $query->post->ID, array( 298, 219 ), array( 'title' => @$image_title ) );
 				$product = new WC_Product($query->post);
 				$product_price = $product->get_price();
 				
@@ -350,27 +253,8 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 					if( $product_price < $_POST['price'][0] or $product_price > $_POST['price'][1] )
 						continue;
 				}
-				
-				echo "<li class='post-{$query->post->ID} product type-product status-publish has-post-thumbnail shipping-taxable product-type-simple instock'>
-						<div class='top-product-section'>
-							<a class='product-category' href='".get_permalink()."'>
-								<span class='image-wrapper'>
-									".$post_thumbnail."
-								</span>
-							</a>
-							<span class='add-to-cart-button-outer'><span class='add-to-cart-button-inner'><a class='qbutton add-to-cart-button button  product_type_simple' data-product_sku='' data-product_id='{$query->post->ID}' rel='nofollow' href='".get_permalink()."'>Read More</a></span></span>
-						</div>
-						<a class='product-category' href='".get_permalink()."'>
-							<h6>{$query->post->post_title}</h6>";
-				$length = $product->get_attribute( 'pa_lengthcm' );
-				$width = $product->get_attribute( 'pa_widthcm' );
-				if( $length and $width )
-					echo "<span class='product-size'>(" . ( round( ( $length * 0.393700787 )/100, 1 )*100 ) . "&Prime; x " . ( round( ( $width * 0.393700787 )/100, 1 )*100 ) . "&Prime;)</span>";
-				if( $product_price )
-					echo "<span class='price'>". $product->get_price_html() ."</span>";
-				echo 
-						"</a>
-					</li>";
+
+				woocommerce_get_template_part( 'content', 'product' );
 			}
 			wp_reset_postdata();
 		}else{
@@ -391,7 +275,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 		
 		return $attributes;
 	}
-	
+
 	function get_product_categories( $current_product_cat = '' ) {
 		$args = array(
 			'pad_counts'         => 1,
@@ -405,5 +289,10 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 		);
 		
 		return get_terms( 'product_cat', apply_filters( 'wc_product_dropdown_categories_get_terms_args', $args ) );
+	}
+
+	public static function add_product_class( $classes ) {
+		$classes[] = 'product';
+		return $classes;
 	}
 }

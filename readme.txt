@@ -68,12 +68,11 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 * New type Image. Admin can upload image to select and deselect before/instead of text
 * Option to add icons before/after option text
 * Option to take control over (default) sorting function, make it AJAXy and work with filters
+* Option to add class to product element through admin
+* Option to edit "No Products" text and set for it specific class
 
 = Changes: =
 * Optimize and then Refactor the code
-* Minimize CSS and JavaScript files
-* Plugin return woocommerce' default structure for product. This MUST be changed because if site has other product html
-  structure after using any filter page will look broken.
 
 
 == Installation ==
@@ -92,8 +91,15 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 
 == Changelog ==
 
-* 1.1.0
-    - CSS and JavaScript files minimized
-* 1.0.2
-    - better support for older PHP versions
-* 1.0.1 is the first public version
+= 1.1.0 =
+* Tweak - CSS and JavaScript files minimized
+* Fix - Adding support to themes that require product div to have "product" class
+* Templating - return woocommerce/theme default structure for product
+* Templating - html parts moved to separate files in templates folder. You can overwrite them by creating folder
+  "woocommerce-filters" and file with same name as in plugin templates folder.
+
+= 1.0.2 =
+* Fix - better support for older PHP versions
+
+= 1.0.1 =
+* First public version
