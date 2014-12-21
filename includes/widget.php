@@ -234,6 +234,8 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 		$args = array( 'tax_query' => $tax_query, 'posts_per_page' => 9, 'post_type' => 'product' );
 		
 		$query = new WP_Query( $args );
+		$br_options = get_option('br_filters_options');
+		$has_products = false;
 		
 		if( $query->have_posts() ){
 			while( $query->have_posts() ){
@@ -254,11 +256,14 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 						continue;
 				}
 
+				$has_products = true;
 				woocommerce_get_template_part( 'content', 'product' );
 			}
 			wp_reset_postdata();
-		}else{
-			echo "<div class='no-products'>There are no products meeting your criteria</div>";
+		}
+
+		if( ! $has_products ){
+			echo "<div class='no-products" . ( ( $br_options['no_products_class'] ) ? ' '.$br_options['no_products_class'] : '' ) . "'>" . $br_options['no_products_message'] . "</div>";
 		}
         die();
 	}
