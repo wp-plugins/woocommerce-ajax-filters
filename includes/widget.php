@@ -28,7 +28,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
         $control_ops = array( 'id_base' => 'berocket_aapf_widget' );
 
         /* Create the widget. */
-        $this->WP_Widget( 'berocket_aapf_widget', 'Product Filters', $widget_ops, $control_ops );
+        $this->WP_Widget( 'berocket_aapf_widget', 'AJAX Product Filters', $widget_ops, $control_ops );
 	}
 
 	/**

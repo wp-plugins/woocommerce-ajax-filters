@@ -4,8 +4,8 @@ Contributors: dholovnia, berocket
 Donate link: http://berocket.com
 Tags: filters, product filters, ajax product filters, advanced product filters, woocommerce filters, woocommerce product filters, woocommerce ajax product filters
 Requires at least: 3.9
-Tested up to: 4.0.1
-Stable tag: 1.0.2
+Tested up to: 4.1
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,7 +38,7 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 = Step 2: =
 * Install and activate plugin
 * Go to Admin area -> Appearance -> Widgets
-* In Available Widgets ( left side of the screen ) find Product Filters
+* In Available Widgets ( left side of the screen ) find AJAX Product Filters
 * Drag it to Sidebar you choose for it
 * Enter title, choose attribute that will be used for filtering products, choose filter type,
  choose operator( whether product should have all selected values (AND) or one of them (OR) ),
@@ -50,7 +50,7 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 
 = Advanced Settings (Widget area): =
 
-* Product Category - if you want to pin your filter to one category of the product this is good place to do it.
+* Product Category - if you want to pin your filter to category of the product this is good place to do it.
  Eg. You selling Phones and Cases for them. If user choose Category "Phones" filter "Have Wi-Fi" will appear
  but if user will choose "Cases" it will not be there as Admin set that "Have Wi-Fi" filter will be visible only on
  "Phones" category.
@@ -86,7 +86,7 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 
 == Changelog ==
 
-= 1.1.0 =
+= 1.0.3 =
 * Enhancement - CSS and JavaScript files minimized
 * Enhancement - Settings page added
 * Enhancement - "No Products" message and it's class can be changed through admin
