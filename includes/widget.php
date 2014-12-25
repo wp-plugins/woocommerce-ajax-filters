@@ -33,6 +33,9 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 
 	/**
 	 * Show widget to user
+	 *
+	 * @param array $args
+	 * @param array $instance
 	 */
 	function widget( $args, $instance ) {
 		if( !is_shop() and !is_product_category() ) return;
@@ -48,19 +51,49 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 
 		wp_enqueue_script( 'jquery-ui-core' );
 		wp_enqueue_script( 'jquery-ui-slider' );
-		wp_enqueue_script( 'berocket_aapf_widget-script', plugins_url('../js/widget.min.js', __FILE__), array('jquery') );
+		wp_enqueue_script( 'berocket_aapf_widget-script', plugins_url('../js/widget.js', __FILE__), array('jquery') );
 		wp_enqueue_script( 'berocket_aapf_widget-hack-script', plugins_url('../js/mobiles.min.js', __FILE__), array('jquery') );
         
         $wp_query_product_cat = '-1';
-        if( @$wp_query->query['product_cat'] )
-			$wp_query_product_cat = $wp_query->query['product_cat'];
-		
+        if ( @$wp_query->query['product_cat'] ) {
+	        $wp_query_product_cat = explode( "/", $wp_query->query['product_cat'] );
+	        $wp_query_product_cat = $wp_query_product_cat[ count( $wp_query_product_cat ) - 1 ];
+        }
+
 		wp_localize_script( 'berocket_aapf_widget-script', 'the_ajax_script', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ), 'product_cat' => $wp_query_product_cat ) );
-		
+
 		extract( $args );
 		extract( $instance );
-		
-		if( $product_cat and $product_cat != $wp_query->query['product_cat'] ) return ;
+
+		$product_cat = @ json_decode( $product_cat );
+
+		if ( $product_cat ) {
+			$hide_widget = true;
+
+			$cur_cat = get_term_by( 'slug', $wp_query_product_cat, 'product_cat' );
+			$cur_cat_ancestors = get_ancestors( $cur_cat->term_id, 'product_cat' );
+			$cur_cat_ancestors[] = $cur_cat->term_id;
+
+			if ( $cat_propagation ){
+				foreach ( $product_cat as $cat ) {
+					$cat = get_term_by( 'slug', $cat, 'product_cat' );
+
+					if ( @ in_array( $cat->term_id, $cur_cat_ancestors ) ) {
+						$hide_widget = false;
+					}
+				}
+			} else {
+				foreach ( $product_cat as $cat ) {
+					if ( $cat == $wp_query_product_cat ) {
+						$hide_widget = false;
+					}
+				}
+			}
+
+			if ( $hide_widget ) {
+				return true;
+			}
+		}
 		
 		$terms = get_terms( array( $attribute ), $args = array( 'orderby' => 'name', 'order' => 'ASC' ) );
 		$args = array(
@@ -135,6 +168,10 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 
 	/**
 	 * Validating and updating widget data
+	 *
+	 * @param array $new_instance
+	 * @param array $old_instance
+	 *
 	 * @return array - new merged instance
 	 */
 	function update( $new_instance, $old_instance ) {
@@ -144,21 +181,28 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 		$instance['title'] = strip_tags( $new_instance['title'] );
 		$instance['attribute'] = strip_tags( $new_instance['attribute'] );
 		$instance['type'] = strip_tags( $new_instance['type'] );
-		$instance['product_cat'] = strip_tags( $new_instance['product_cat'] );
+		$instance['product_cat'] = ( $new_instance['product_cat'] ) ? json_encode( $new_instance['product_cat'] ) : '';
 		$instance['scroll_theme'] = strip_tags( $new_instance['scroll_theme'] );
-		
+		$instance['cat_propagation'] = (int) $new_instance['cat_propagation'];
+
 		if( $new_instance['height'] != 'auto' ) $new_instance['height'] = (float) $new_instance['height'];
 		if( !$new_instance['height'] ) $new_instance['height'] = 'auto';
 		$instance['height'] = $new_instance['height'];
 		
 		if( $new_instance['operator'] != 'OR' ) $new_instance['operator'] = 'AND';
 		$instance['operator'] = $new_instance['operator'];
-		
+
+		if( $instance['attribute'] == 'price' ) $instance['type'] = 'slider';
+
 		return $instance;
 	}
 
 	/**
 	 * Output admin form
+	 *
+	 * @param array $instance
+	 *
+	 * @return string|void
 	 */
 	function form( $instance ) {
 		wp_enqueue_script( 'berocket_aapf_widget-admin-script', plugins_url('../js/admin.js', __FILE__), array('jquery') );
@@ -178,7 +222,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 
 		$instance = wp_parse_args( (array) $instance, $defaults );
 		$attributes = $this->get_attributes();
-		$categories = self::get_product_categories( $instance['product_cat'] );
+		$categories = self::get_product_categories( @ json_decode( $instance['product_cat'] ) );
 
 		include plugin_dir_path( __DIR__ ) . "templates/admin.php";
 	}

@@ -9,19 +9,30 @@
 			
 			if( $el ){
 				$li = $el.parent().parent();
+                if( $el.is("select") ) $li = $el.find("option:selected");
 				taxonomy = $li.data('taxonomy');
 				term_id = $li.data('term_id');
 				operator = $li.data('operator');
-				
-				if( $el.is(':checked') || $el.is(':selected') ){
-					berocket_aapf_widget_product_filters[berocket_aapf_widget_product_filters.length] = [taxonomy,term_id,operator];
-				}else{
-					$(berocket_aapf_widget_product_filters).each(function (i,o){
-						if( o[0] == taxonomy && o[1] == term_id ){
-							berocket_aapf_widget_product_filters.splice(i, 1);
-						}
-					});
-				}
+
+                if( $el.is("select") ){
+                    $(berocket_aapf_widget_product_filters).each(function (i, o) {
+                        if (o[0] == taxonomy) {
+                            berocket_aapf_widget_product_filters.splice(i, 1);
+                        }
+                    });
+                    if( $li.val() )
+                        berocket_aapf_widget_product_filters[berocket_aapf_widget_product_filters.length] = [taxonomy, term_id, operator];
+                }else {
+                    if ($el.is(':checked') || $el.is(':selected')) {
+                        berocket_aapf_widget_product_filters[berocket_aapf_widget_product_filters.length] = [taxonomy, term_id, operator];
+                    } else {
+                        $(berocket_aapf_widget_product_filters).each(function (i, o) {
+                            if (o[0] == taxonomy && o[1] == term_id) {
+                                berocket_aapf_widget_product_filters.splice(i, 1);
+                            }
+                        });
+                    }
+                }
 			}
 
 			$t = $('.berocket_filter_slider');

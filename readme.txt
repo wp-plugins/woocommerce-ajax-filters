@@ -68,10 +68,6 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 * New type Image. Admin can upload image to select and deselect before/instead of text
 * Option to add icons before/after option text
 * Option to take control over (default) sorting function, make it AJAXy and work with filters
-* Option to edit "No Products" text and set for DIV specific class
-
-= Changes: =
-* Optimize and then Refactor the code
 
 
 == Installation ==
@@ -95,7 +91,13 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 * Enhancement - Settings page added
 * Enhancement - "No Products" message and it's class can be changed through admin
 * Enhancement - Option added that can enable control over sorting( if visible )
+* Enhancement - User can select several categories instead of one. Now you don't need to create several same filters
+  for different categories.
+* Enhancement - Added option "include subcats?". if selected filter will be shown in selected categories and their
+  subcategories
 * Fix - Adding support to themes that require product div to have "product" class
+* Fix - Slider in categories wasn't initialized
+* Fix - Subcategories wasn't working. Only Main categories were showing filters
 * Templating - return woocommerce/theme default structure for product
 * Templating - html parts moved to separate files in templates folder. You can overwrite them by creating folder
   "woocommerce-filters" and file with same name as in plugin templates folder.
