@@ -26,7 +26,7 @@
 				<th scope="row">Sorting control</th>
 				<td>
 					<input name="br_filters_options[control_sorting]" type='checkbox' value='1' <?php if( @$options['control_sorting'] ) echo "checked='checked'";?>/>
-					<span style="color:#666666;margin-left:2px;">Take control over WooCommerce's sorting selectbox?</span>
+					<span style="color:#666666;margin-left:2px;">Take control over WooCommerce's sorting selectbox? ( not working yet )</span>
 				</td>
 			</tr>
 		</table>
