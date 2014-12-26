@@ -3,10 +3,12 @@
 	Plugin Name: Advanced AJAX Product Filters for WooCommerce
 	Plugin URI: http://berocket.com/wp-plugins/product-filters
 	Description: Advanced AJAX Product Filters for WooCommerce
-	Version: 1.0.3
+	Version: 1.0.3.2
 	Author: BeRocket
 	Author URI: http://berocket.com
 */
+
+define( "AAPF_TEMPLATE_PATH", plugin_dir_path( __FILE__ ) . "templates/" );
 
 require_once dirname( __FILE__ ).'/includes/widget.php';
 require_once dirname( __FILE__ ).'/includes/functions.php';
@@ -36,7 +38,7 @@ class BeRocket_AAPF {
 	}
 
 	public static function br_render_form(){
-		include plugin_dir_path( __DIR__ ) . "templates/admin-settings.php";
+		include AAPF_TEMPLATE_PATH . "admin-settings.php";
 	}
 
 	/**
@@ -55,8 +57,8 @@ class BeRocket_AAPF {
 		}
 
 		// Get default slug-name.php
-		if ( ! $template && $name && file_exists( plugin_dir_path( __DIR__ ) . "templates/{$name}.php" ) ) {
-			$template = plugin_dir_path( __DIR__ ) . "templates/{$name}.php";
+		if ( ! $template && $name && file_exists( AAPF_TEMPLATE_PATH . "{$name}.php" ) ) {
+			$template = AAPF_TEMPLATE_PATH . "{$name}.php";
 		}
 
 	    // Allow 3rd party plugin filter template file from their plugin
