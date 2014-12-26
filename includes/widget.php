@@ -224,7 +224,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 		$attributes = $this->get_attributes();
 		$categories = self::get_product_categories( @ json_decode( $instance['product_cat'] ) );
 
-		include plugin_dir_path( __DIR__ ) . "templates/admin.php";
+		include AAPF_TEMPLATE_PATH . "admin.php";
 	}
 
 	/**
