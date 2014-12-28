@@ -96,10 +96,11 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 		}
 
 		$woocommerce_hide_out_of_stock_items = BeRocket_AAPF_Widget::woocommerce_hide_out_of_stock_items();
-		$terms = $sort_terms = array();
+		$terms = $sort_terms = $price_range = array();
 
 		if( $attribute == 'price' ) {
 			$price_range = BeRocket_AAPF_Widget::get_price_range( $wp_query_product_cat, $woocommerce_hide_out_of_stock_items );
+			if( ! $price_range ) return false;
 		}else{
 			$my_query = BeRocket_AAPF_Widget::get_filter_products( $wp_query_product_cat, $woocommerce_hide_out_of_stock_items );
 
@@ -113,6 +114,8 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 					}
 				}
 			}
+
+			if ( @ count( $terms ) < 2 ) return false;
 
 			array_multisort( $sort_terms, $terms );
 			set_query_var( 'terms', $terms );
