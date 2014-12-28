@@ -5,7 +5,7 @@ Donate link: http://berocket.com
 Tags: filters, product filters, ajax product filters, advanced product filters, woocommerce filters, woocommerce product filters, woocommerce ajax product filters
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 1.0.3.3
+Stable tag: 1.0.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
