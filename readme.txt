@@ -88,6 +88,7 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 
 = 1.0.3.3 =
 * Enhancement/Fix - Showing products and options now depending on woocommerce_hide_out_of_stock_items option
+* Enhancement/Fix - If not enough data available( quantity of options < 2 ) filters will not be shown.
 * Fix - If in category, only products/options from this category will be shown
 
 = 1.0.3.2 =
