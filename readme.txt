@@ -5,7 +5,7 @@ Donate link: http://berocket.com
 Tags: filters, product filters, ajax product filters, advanced product filters, woocommerce filters, woocommerce product filters, woocommerce ajax product filters
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 1.0.3.2
+Stable tag: 1.0.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,10 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 ---
 
 == Changelog ==
+
+= 1.0.3.3 =
+* Enhancement/Fix - Showing products and options now depending on woocommerce_hide_out_of_stock_items option
+* Fix - If in category, only products/options from this category will be shown
 
 = 1.0.3.2 =
 * Fix - wrong path was committed in previous version that killed plugin

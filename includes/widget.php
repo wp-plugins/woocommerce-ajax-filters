@@ -94,24 +94,31 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 				return true;
 			}
 		}
-		
-		$terms = get_terms( array( $attribute ), $args = array( 'orderby' => 'name', 'order' => 'ASC' ) );
-		$args = array(
-			'post_type' => 'product',
-			'orderby' => "category",
-			'order' => 'ASC',
-			'ignore_sticky_posts'=> 1
-		);
-		
-		$price_range = array();
-		
-		$my_query = new WP_Query($args);
-		if( $my_query->have_posts() ) {
-			while ($my_query->have_posts()){
-				$my_query->the_post();
-				$meta_values = get_post_meta( $my_query->post->ID, '_price' );
-				$price_range[] = $meta_values[0];
+
+		$woocommerce_hide_out_of_stock_items = BeRocket_AAPF_Widget::woocommerce_hide_out_of_stock_items();
+		$terms = $sort_terms = $price_range = array();
+
+		if( $attribute == 'price' ) {
+			$price_range = BeRocket_AAPF_Widget::get_price_range( $wp_query_product_cat, $woocommerce_hide_out_of_stock_items );
+			if( ! $price_range ) return false;
+		}else{
+			$my_query = BeRocket_AAPF_Widget::get_filter_products( $wp_query_product_cat, $woocommerce_hide_out_of_stock_items );
+
+			if ( $my_query->have_posts() ) {
+				while ( $my_query->have_posts() ) {
+					$my_query->the_post();
+					$t_terms = get_the_terms( $my_query->post->ID, $attribute );
+					foreach( $t_terms as $key => $val ){
+						$terms[$key] = $val;
+						$sort_terms[$key] = $val->name;
+					}
+				}
 			}
+
+			if ( @ count( $terms ) < 2 ) return false;
+
+			array_multisort( $sort_terms, $terms );
+			set_query_var( 'terms', $terms );
 		}
 
 		$style = $class = '';
@@ -122,7 +129,6 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 		
 		if( !$scroll_theme ) $scroll_theme = 'dark';
 
-		set_query_var( 'terms', $terms );
 		set_query_var( 'operator', $operator );
 		set_query_var( 'title', $title );
 		set_query_var( 'class', $class );
@@ -166,6 +172,69 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 		br_get_template_part('widget_end');
 	}
 
+	public static function woocommerce_hide_out_of_stock_items(){
+		$hide = get_option( 'woocommerce_hide_out_of_stock_items', null );
+
+		if ( is_array( $hide ) ) {
+			$hide = array_map( 'stripslashes', $hide );
+		} elseif ( ! is_null( $hide ) ) {
+			$hide = stripslashes( $hide );
+		}
+
+		return $hide;
+	}
+
+	public static function get_price_range( $wp_query_product_cat, $woocommerce_hide_out_of_stock_items ){
+		$price_range = array();
+		$my_query = BeRocket_AAPF_Widget::get_filter_products( $wp_query_product_cat, $woocommerce_hide_out_of_stock_items );
+
+		if ( $my_query->have_posts() ) {
+			while ( $my_query->have_posts() ) {
+				$my_query->the_post();
+				$meta_values = get_post_meta( $my_query->post->ID, '_price' );
+				if ( $meta_values[0] or $woocommerce_hide_out_of_stock_items != 'yes' ) {
+					$price_range[] = $meta_values[0];
+				}
+			}
+		}
+
+		if ( @ count( $price_range ) < 2 ) {
+			return false;
+		}else{
+			return $price_range;
+		}
+	}
+
+	function get_filter_products( $wp_query_product_cat, $woocommerce_hide_out_of_stock_items ) {
+		$args = array(
+			'post_type'           => 'product',
+			'orderby'             => 'category',
+			'order'               => 'ASC',
+			'ignore_sticky_posts' => 1
+		);
+
+		if ( $wp_query_product_cat != - 1 ) {
+			$args['tax_query'] = array(
+				array(
+					'taxonomy' => 'product_cat',
+					'field'    => 'slug',
+					'terms'    => array( $wp_query_product_cat ),
+				)
+			);
+		}
+
+		if ( $woocommerce_hide_out_of_stock_items == 'yes' ) {
+			$args['meta_query'] = array(
+				array(
+					'key'     => '_stock_status',
+					'value'   => 'instock',
+					'compare' => '='
+				)
+			);
+		}
+
+		return new WP_Query( $args );
+	}
 	/**
 	 * Validating and updating widget data
 	 *
