@@ -23,6 +23,14 @@
 				</td>
 			</tr>
 			<tr>
+				<th scope="row">Products selector</th>
+				<td>
+					<input name="br_filters_options[products_holder_id]" type='text' value='<?php echo @$options['products_holder_id']?$options['products_holder_id']:'ul.products'?>'/>
+					<br />
+					<span style="color:#666666;margin-left:2px;">Selector for tag that is holding products. Don't change this if you don't know what it is</span>
+				</td>
+			</tr>
+			<tr>
 				<th scope="row">Sorting control</th>
 				<td>
 					<input name="br_filters_options[control_sorting]" type='checkbox' value='1' <?php if( @$options['control_sorting'] ) echo "checked='checked'";?>/>

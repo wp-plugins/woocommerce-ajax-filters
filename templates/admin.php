@@ -15,16 +15,16 @@
 <p>
 	<label>Type:
 		<select id="<?php echo $this->get_field_id( 'type' ); ?>" name="<?php echo $this->get_field_name( 'type' ); ?>" class="berocket_aapf_widget_admin_type_select">
-			<? if ( $instance['attribute'] != 'price' ){ ?>
+			<?php if ( $instance['attribute'] != 'price' ){ ?>
 				<option <?php if ($instance['type'] == 'checkbox') echo 'selected'; ?> value="checkbox">Checkbox</option>
 				<option <?php if ($instance['type'] == 'radio') echo 'selected'; ?> value="radio">Radio</option>
 				<option <?php if ($instance['type'] == 'select') echo 'selected'; ?> value="select">Select</option>
-			<? } ?>
+			<?php } ?>
 			<option <?php if ($instance['type'] == 'slider') echo 'selected'; ?> value="slider">Slider</option>
 		</select>
 	</label>
 </p>
-<p <? if ($instance['attribute'] == 'pa_lengthcm' or $instance['attribute'] == 'pa_widthcm' or $instance['attribute'] == 'price' ) echo " style='display: none;'"; ?> >
+<p <?php if ( $instance['attribute'] == 'price' ) echo " style='display: none;'"; ?> >
 	<label>Operator:
 		<select id="<?php echo $this->get_field_id( 'operator' ); ?>" name="<?php echo $this->get_field_name( 'operator' ); ?>" class="berocket_aapf_widget_admin_operator_select">
 			<option <?php if ($instance['operator'] == 'AND') echo 'selected'; ?> value="AND">AND</option>

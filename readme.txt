@@ -5,7 +5,7 @@ Donate link: http://berocket.com
 Tags: filters, product filters, ajax product filters, advanced product filters, woocommerce filters, woocommerce product filters, woocommerce ajax product filters
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 1.0.3.2
+Stable tag: 1.0.3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,6 +68,8 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 * New type Image. Admin can upload image to select and deselect before/instead of text
 * Option to add icons before/after option text
 * Option to take control over (default) sorting function, make it AJAXy and work with filters
+* Add filters and actions for other developers to make it easier extending plugin. Please don't edit plugin directly
+  I'm updating it almost daily =)
 
 
 == Installation ==
@@ -85,6 +87,14 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 ---
 
 == Changelog ==
+
+= 1.0.3.5 =
+* Enhancement/Fix - Option to set selector for products holder is added. Now you control where data will returned to
+
+= 1.0.3.3 =
+* Enhancement/Fix - Showing products and options now depending on woocommerce_hide_out_of_stock_items option
+* Enhancement/Fix - If not enough data available( quantity of options < 2 ) filters will not be shown.
+* Fix - If in category, only products/options from this category will be shown
 
 = 1.0.3.2 =
 * Fix - wrong path was committed in previous version that killed plugin

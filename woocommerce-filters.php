@@ -3,7 +3,7 @@
 	Plugin Name: Advanced AJAX Product Filters for WooCommerce
 	Plugin URI: http://berocket.com/wp-plugins/product-filters
 	Description: Advanced AJAX Product Filters for WooCommerce
-	Version: 1.0.3.2
+	Version: 1.0.3.5
 	Author: BeRocket
 	Author URI: http://berocket.com
 */
@@ -22,7 +22,8 @@ class BeRocket_AAPF {
 	public static $defaults = array(
 		"no_products_message" => "There are no products meeting your criteria",
 		"no_products_class"   => "",
-		"control_sorting"     => "0"
+		"control_sorting"     => "0",
+		"products_holder_id"  => "ul.products"
 	);
 
 	function __construct(){
