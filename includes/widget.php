@@ -41,26 +41,42 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 		if( !is_shop() and !is_product_category() ) return;
 		global $wp_query;
         
-        wp_register_style( 'berocket_aapf_widget-style', plugins_url('../css/widget.min.css', __FILE__) );
+        wp_register_style( 'berocket_aapf_widget-style', plugins_url( '../css/widget.min.css', __FILE__ ) );
         wp_enqueue_style( 'berocket_aapf_widget-style' );
 
+		/* font awesome */
+		wp_register_style( 'berocket_aapf_widget-font-awesome', plugins_url( '../css/font-awesome.min.css', __FILE__ ) );
+        wp_enqueue_style( 'berocket_aapf_widget-font-awesome' );
+
         /* custom scrollbar */
-        wp_enqueue_script( 'berocket_aapf_widget-scroll-script', plugins_url('../js/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js', __FILE__), array('jquery') );
-        wp_register_style( 'berocket_aapf_widget-scroll-style', plugins_url('../js/custom-scrollbar/jquery.mCustomScrollbar.min.css', __FILE__) );
+        wp_enqueue_script( 'berocket_aapf_widget-scroll-script', plugins_url( '../js/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js', __FILE__ ), array( 'jquery' ) );
+        wp_register_style( 'berocket_aapf_widget-scroll-style', plugins_url( '../js/custom-scrollbar/jquery.mCustomScrollbar.min.css', __FILE__ ) );
         wp_enqueue_style( 'berocket_aapf_widget-scroll-style' );
 
 		wp_enqueue_script( 'jquery-ui-core' );
 		wp_enqueue_script( 'jquery-ui-slider' );
-		wp_enqueue_script( 'berocket_aapf_widget-script', plugins_url('../js/widget.js', __FILE__), array('jquery') );
-		wp_enqueue_script( 'berocket_aapf_widget-hack-script', plugins_url('../js/mobiles.min.js', __FILE__), array('jquery') );
+		wp_enqueue_script( 'berocket_aapf_widget-script', plugins_url( '../js/widget.min.js', __FILE__ ), array( 'jquery' ) );
+		wp_enqueue_script( 'berocket_aapf_widget-hack-script', plugins_url( '../js/mobiles.min.js', __FILE__ ), array( 'jquery' ) );
+
+		$br_options = apply_filters( 'berocket_aapf_listener_br_options', get_option('br_filters_options') );
         
         $wp_query_product_cat = '-1';
-        if ( @$wp_query->query['product_cat'] ) {
+        if ( @ $wp_query->query['product_cat'] ) {
 	        $wp_query_product_cat = explode( "/", $wp_query->query['product_cat'] );
 	        $wp_query_product_cat = $wp_query_product_cat[ count( $wp_query_product_cat ) - 1 ];
         }
 
-		wp_localize_script( 'berocket_aapf_widget-script', 'the_ajax_script', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ), 'product_cat' => $wp_query_product_cat ) );
+		if( ! $br_options['products_holder_id'] ) $br_options['products_holder_id'] = 'ul.products';
+
+		wp_localize_script(
+			'berocket_aapf_widget-script',
+			'the_ajax_script',
+			array(
+				'ajaxurl'            => admin_url( 'admin-ajax.php' ),
+				'product_cat'        => $wp_query_product_cat,
+				'products_holder_id' => $br_options['products_holder_id']
+			)
+		);
 
 		extract( $args );
 		extract( $instance );
@@ -74,18 +90,20 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 			$cur_cat_ancestors = get_ancestors( $cur_cat->term_id, 'product_cat' );
 			$cur_cat_ancestors[] = $cur_cat->term_id;
 
-			if ( $cat_propagation ){
-				foreach ( $product_cat as $cat ) {
-					$cat = get_term_by( 'slug', $cat, 'product_cat' );
+			if( $product_cat ) {
+				if ( $cat_propagation ) {
+					foreach ( $product_cat as $cat ) {
+						$cat = get_term_by( 'slug', $cat, 'product_cat' );
 
-					if ( @ in_array( $cat->term_id, $cur_cat_ancestors ) ) {
-						$hide_widget = false;
+						if ( @ in_array( $cat->term_id, $cur_cat_ancestors ) ) {
+							$hide_widget = false;
+						}
 					}
-				}
-			} else {
-				foreach ( $product_cat as $cat ) {
-					if ( $cat == $wp_query_product_cat ) {
-						$hide_widget = false;
+				} else {
+					foreach ( $product_cat as $cat ) {
+						if ( $cat == $wp_query_product_cat ) {
+							$hide_widget = false;
+						}
 					}
 				}
 			}
@@ -108,9 +126,11 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 				while ( $my_query->have_posts() ) {
 					$my_query->the_post();
 					$t_terms = get_the_terms( $my_query->post->ID, $attribute );
-					foreach( $t_terms as $key => $val ){
-						$terms[$key] = $val;
-						$sort_terms[$key] = $val->name;
+					if( $t_terms ) {
+						foreach ( $t_terms as $key => $val ) {
+							$terms[ $key ]      = $val;
+							$sort_terms[ $key ] = $val->name;
+						}
 					}
 				}
 			}
@@ -118,7 +138,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 			if ( @ count( $terms ) < 2 ) return false;
 
 			array_multisort( $sort_terms, $terms );
-			set_query_var( 'terms', $terms );
+			set_query_var( 'terms', apply_filters( 'berocket_aapf_widget_terms', $terms ) );
 		}
 
 		$style = $class = '';
@@ -130,9 +150,9 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 		if( !$scroll_theme ) $scroll_theme = 'dark';
 
 		set_query_var( 'operator', $operator );
-		set_query_var( 'title', $title );
-		set_query_var( 'class', $class );
-		set_query_var( 'style', $style );
+		set_query_var( 'title', apply_filters( 'berocket_aapf_widget_title', $title ) );
+		set_query_var( 'class', apply_filters( 'berocket_aapf_widget_class', $class ) );
+		set_query_var( 'style', apply_filters( 'berocket_aapf_widget_style', $style ) );
 		set_query_var( 'scroll_theme', $scroll_theme );
 		set_query_var( 'x', time() );
 
@@ -145,17 +165,29 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 			$slider_class = 'berocket_filter_slider';
 
 			if( $attribute == 'price' ){
-				foreach( $price_range as $price ){
-					if( $min === false or $min > (int) $price ) $min = $price;
-					if( $max === false or $max < (int) $price ) $max = $price;
+				if( $price_range ) {
+					foreach ( $price_range as $price ) {
+						if ( $min === false or $min > (int) $price ) {
+							$min = $price;
+						}
+						if ( $max === false or $max < (int) $price ) {
+							$max = $price;
+						}
+					}
 				}
 				$id = rand( 0, time() );
 				$slider_class = 'berocket_filter_price_slider';
 				$main_class .= ' price';
 			}else{
-				foreach( $terms as $term ){
-					if( $min === false or $min > (int) $term->slug ) $min = $term->slug;
-					if( $max === false or $max < (int) $term->slug ) $max = $term->slug;
+				if( $terms ) {
+					foreach ( $terms as $term ) {
+						if ( $min === false or $min > (int) $term->slug ) {
+							$min = $term->slug;
+						}
+						if ( $max === false or $max < (int) $term->slug ) {
+							$max = $term->slug;
+						}
+					}
 				}
 				$id = $term->taxonomy;
 			}
@@ -181,7 +213,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 			$hide = stripslashes( $hide );
 		}
 
-		return $hide;
+		return apply_filters( 'berocket_aapf_hide_out_of_stock_items', $hide );
 	}
 
 	public static function get_price_range( $wp_query_product_cat, $woocommerce_hide_out_of_stock_items ){
@@ -199,10 +231,10 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 		}
 
 		if ( @ count( $price_range ) < 2 ) {
-			return false;
-		}else{
-			return $price_range;
+			$price_range = false;
 		}
+
+		return apply_filters( 'berocket_aapf_get_price_range', $price_range );
 	}
 
 	function get_filter_products( $wp_query_product_cat, $woocommerce_hide_out_of_stock_items ) {
@@ -232,6 +264,8 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 				)
 			);
 		}
+
+		$args = apply_filters( 'berocket_aapf_get_filter_products_args', $args );
 
 		return new WP_Query( $args );
 	}
@@ -263,7 +297,9 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 
 		if( $instance['attribute'] == 'price' ) $instance['type'] = 'slider';
 
-		return $instance;
+		do_action( 'berocket_aapf_admin_update', $instance, $new_instance, $old_instance );
+
+		return apply_filters( 'berocket_aapf_admin_update_instance', $instance );
 	}
 
 	/**
@@ -289,6 +325,8 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 			'scroll_theme' => 'dark'
 		);
 
+		$defaults = apply_filters( 'berocket_aapf_form_defaults', $defaults );
+
 		$instance = wp_parse_args( (array) $instance, $defaults );
 		$attributes = $this->get_attributes();
 		$categories = self::get_product_categories( @ json_decode( $instance['product_cat'] ) );
@@ -304,12 +342,14 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 
 		add_filter( 'post_class', array( __CLASS__, 'add_product_class' ) );
 		
-		$attributes = self::get_attributes();
+		$attributes = apply_filters( 'berocket_aapf_listener_get_attributes', self::get_attributes() );
 		if( @$attributes ) {
 			foreach ( $attributes as $k => $v ) {
 				$terms = get_terms( array( $k ), $args = array( 'orderby' => 'name', 'order' => 'ASC' ) );
-				foreach ( $terms as $term ) {
-					$attributes_terms[ $k ][ $term->term_id ] = $term->slug;
+				if( $terms ) {
+					foreach ( $terms as $term ) {
+						$attributes_terms[ $k ][ $term->term_id ] = $term->slug;
+					}
 				}
 			}
 		}
@@ -320,19 +360,27 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 				$taxonomies_operator[$t[0]] = $t[2];
 			}
 		}
-		
+
+		$taxonomies = apply_filters( 'berocket_aapf_listener_taxonomies', @$taxonomies );
+		$taxonomies_operator = apply_filters( 'berocket_aapf_listener_taxonomies_operator', @$taxonomies_operator );
+
 		if( @$taxonomies ){
 			$tax_query['relation'] = 'AND';
-			foreach( $taxonomies as $k=>$v ){
-				if( $taxonomies_operator[$k] == 'AND' ) $op = 'AND';
-				else $op = 'IN';
-				
-				$tax_query[] = array(
-					'taxonomy' => $k,
-					'field'    => 'slug',
-					'terms'    => $v,
-					'operator' => $op
-				);
+			if( $taxonomies ) {
+				foreach ( $taxonomies as $k => $v ) {
+					if ( $taxonomies_operator[ $k ] == 'AND' ) {
+						$op = 'AND';
+					} else {
+						$op = 'IN';
+					}
+
+					$tax_query[] = array(
+						'taxonomy' => $k,
+						'field'    => 'slug',
+						'terms'    => $v,
+						'operator' => $op
+					);
+				}
 			}
 		}
 		
@@ -345,9 +393,11 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 			);
 		
 		$args = array( 'tax_query' => $tax_query, 'posts_per_page' => 9, 'post_type' => 'product' );
-		
+
+		$args = apply_filters( 'berocket_aapf_listener_wp_query_args', $args );
+
 		$query = new WP_Query( $args );
-		$br_options = get_option('br_filters_options');
+		$br_options = apply_filters( 'berocket_aapf_listener_br_options', get_option('br_filters_options') );
 		$has_products = false;
 		
 		if( $query->have_posts() ){
@@ -376,7 +426,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 		}
 
 		if( ! $has_products ){
-			echo "<div class='no-products" . ( ( $br_options['no_products_class'] ) ? ' '.$br_options['no_products_class'] : '' ) . "'>" . $br_options['no_products_message'] . "</div>";
+			echo apply_filters( 'berocket_aapf_listener_no_products_message', "<div class='no-products" . ( ( $br_options['no_products_class'] ) ? ' '.$br_options['no_products_class'] : '' ) . "'>" . $br_options['no_products_message'] . "</div>" );
 		}
         die();
 	}
@@ -391,7 +441,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 			}
 		}
 		
-		return $attributes;
+		return apply_filters( 'berocket_aapf_get_attributes', $attributes );
 	}
 
 	function get_product_categories( $current_product_cat = '' ) {
@@ -411,6 +461,6 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 
 	public static function add_product_class( $classes ) {
 		$classes[] = 'product';
-		return $classes;
+		return apply_filters( 'berocket_aapf_add_product_class', $classes );
 	}
 }

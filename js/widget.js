@@ -5,7 +5,7 @@
             berocket_aapf_widget_product_limits = [],
             berocket_aapf_widget_product_price_limit = [];
 		function updateProducts( $el ){
-			$('ul.products').addClass('hide_products').append('<div class="berocket_aapf_widget_loading" />');
+			$(the_ajax_script.products_holder_id).addClass('hide_products').append('<div class="berocket_aapf_widget_loading" />');
 			
 			if( $el ){
 				$li = $el.parent().parent();
@@ -51,7 +51,7 @@
 			}
 			
 			$.post( the_ajax_script.ajaxurl, { terms: berocket_aapf_widget_product_filters, price: berocket_aapf_widget_product_price_limit, limits: berocket_aapf_widget_product_limits, product_cat: the_ajax_script.product_cat, action: 'berocket_aapf_listener' }, function (data){
-				$('ul.products').html(data).removeClass('hide_products');
+				$(the_ajax_script.products_holder_id).html(data).removeClass('hide_products');
 				$('.berocket_aapf_widget_loading').remove();
 			})
 		}
