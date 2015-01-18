@@ -49,11 +49,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
         
         wp_register_style( 'berocket_aapf_widget-style', plugins_url( '../css/widget.min.css', __FILE__ ) );
         wp_enqueue_style( 'berocket_aapf_widget-style' );
-
-		/* font awesome */
-		wp_register_style( 'berocket_aapf_widget-font-awesome', plugins_url( '../css/font-awesome.min.css', __FILE__ ) );
-        wp_enqueue_style( 'berocket_aapf_widget-font-awesome' );
-
+		
         /* custom scrollbar */
         wp_enqueue_script( 'berocket_aapf_widget-scroll-script', plugins_url( '../js/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js', __FILE__ ), array( 'jquery' ) );
         wp_register_style( 'berocket_aapf_widget-scroll-style', plugins_url( '../js/custom-scrollbar/jquery.mCustomScrollbar.min.css', __FILE__ ) );
