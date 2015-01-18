@@ -84,7 +84,7 @@ http://berocket.com/wp-plugins/product-filters
 
 == Changelog ==
 
-= 1.0.3.7 =
+= 1.0.4 =
 * Enhancement - SEO friendly urls with possibility for users to share/bookmark their search. Will be shortened in future
 * Enhancement - Option added to turn SEO friendly urls on/off. Off by default as this is first version of this feature
 * Enhancement - Option to turn filters on/off globally
