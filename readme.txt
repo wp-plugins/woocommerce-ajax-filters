@@ -5,7 +5,7 @@ Donate link: http://berocket.com
 Tags: filters, product filters, ajax product filters, advanced product filters, woocommerce filters, woocommerce product filters, woocommerce ajax product filters
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 1.0.3.6
+Stable tag: 1.0.3.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,12 +20,18 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 * No reloading, only ajax
 * Slider, radio or checkbox
 * No spamming with widgets in admin, 1 widget - multiple instances
+* SEO friendly urls
 * Filter visibility by product category. Different categories pages = different ( + global ) filters. One shop for everything
+* Can take control over sorting select to make it AJAXy
 * Filter box height limit with scroll themes
 * Working great with custom widget area
 * Unlimited filters by product attributes
 
+= Demo =
+http://woocommerce-product-filter.berocket.com
 
+= Plugin Documentation Page =
+http://berocket.com/wp-plugins/product-filters
 
 = How It Works: =
 
@@ -62,19 +68,6 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 
 
 
-= Next Release ( 1.1.0 ) =
-
-= 1.0.3.6 =
-* Enhancement/Fix - Option to set selector for products holder is added. Now you control where data will returned to
-
-= Features: =
-* New type Image. Admin can upload image to select and deselect before/instead of text
-* Option to add icons before/after option text
-* Option to take control over (default) sorting function, make it AJAXy and work with filters
-* Add filters and actions for other developers to make it easier extending plugin. Please don't edit plugin directly
-  I'm updating it almost daily =)
-
-
 == Installation ==
 
 1. Install WooCommerce AJAX Filters either via the WordPress.org plugin directory, or by uploading the files to your server
@@ -90,6 +83,20 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 ---
 
 == Changelog ==
+
+= 1.0.3.7 =
+* Enhancement - SEO friendly urls with possibility for users to share/bookmark their search. Will be shortened in future
+* Enhancement - Option added to turn SEO friendly urls on/off. Off by default as this is first version of this feature
+* Enhancement - Option to turn filters on/off globally
+* Enhancement - Option to take control over (default) sorting function, make it AJAXy and work with filters
+* Fix - Sorting remain correct after using filters. Sorting wasn't counted before
+* Fix - If there are 2 or more sliders they are not working correctly.
+* Fix - Values in slider was converted to float even when value ia not a price.
+* Fix - If there are 2 or more values for attribute it was not validated when used in slider.
+
+= 1.0.3.6 =
+* Fix - Removed actions that provide warning messages
+* Enhancement - Actions and filters inside plugin
 
 = 1.0.3.3 =
 * Enhancement/Fix - Showing products and options now depending on woocommerce_hide_out_of_stock_items option
