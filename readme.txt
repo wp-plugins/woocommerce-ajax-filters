@@ -30,9 +30,6 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 = Demo =
 http://woocommerce-product-filter.berocket.com
 
-= Plugin Documentation Page =
-http://berocket.com/wp-plugins/product-filters
-
 = How It Works: =
 
 = Step 1: =
