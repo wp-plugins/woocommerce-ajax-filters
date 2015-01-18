@@ -5,7 +5,7 @@ Donate link: http://berocket.com
 Tags: filters, product filters, ajax product filters, advanced product filters, woocommerce filters, woocommerce product filters, woocommerce ajax product filters
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 1.0.3.7
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -84,7 +84,7 @@ http://berocket.com/wp-plugins/product-filters
 
 == Changelog ==
 
-= 1.0.3.7 =
+= 1.0.4 =
 * Enhancement - SEO friendly urls with possibility for users to share/bookmark their search. Will be shortened in future
 * Enhancement - Option added to turn SEO friendly urls on/off. Off by default as this is first version of this feature
 * Enhancement - Option to turn filters on/off globally
