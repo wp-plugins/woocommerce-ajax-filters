@@ -61,7 +61,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 
 		wp_enqueue_script( 'jquery-ui-core' );
 		wp_enqueue_script( 'jquery-ui-slider' );
-		wp_enqueue_script( 'berocket_aapf_widget-script', plugins_url( '../js/widget.min.js', __FILE__ ), array( 'jquery' ) );
+		wp_enqueue_script( 'berocket_aapf_widget-script', plugins_url( '../js/widget.js', __FILE__ ), array( 'jquery' ) );
 		wp_enqueue_script( 'berocket_aapf_widget-hack-script', plugins_url( '../js/mobiles.min.js', __FILE__ ), array( 'jquery' ) );
 
 		$wp_query_product_cat = '-1';
@@ -82,7 +82,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 			'berocket_aapf_widget-script',
 			'the_ajax_script',
 			array(
-				'current_page_url'   => home_url( $wp->request ),
+				'current_page_url'   => preg_replace( "~paged?/[0-9]+/?~", "", home_url( $wp->request ) ),
 				'ajaxurl'            => admin_url( 'admin-ajax.php' ),
 				'product_cat'        => $wp_query_product_cat,
 				'products_holder_id' => $br_options['products_holder_id'],
@@ -373,57 +373,56 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 	 * Widget ajax listener
 	 */
 	public static function listener(){
+		global $wp_query, $wp_rewrite;
 		$br_options = apply_filters( 'berocket_aapf_listener_br_options', get_option('br_filters_options') );
 
 		add_filter( 'post_class', array( __CLASS__, 'add_product_class' ) );
+		add_filter( 'woocommerce_pagination_args', array( __CLASS__, 'pagination_args' ) );
 
 		$args = apply_filters( 'berocket_aapf_listener_wp_query_args', $args );
 
-		$query = new WP_Query( $args );
-		$has_products = false;
-		
-		if( $query->have_posts() ){
-			while( $query->have_posts() ){
-				$query->the_post();
-				$product = new WC_Product($query->post);
-				$product_price = $product->get_price();
-				
-				if( @$_POST['limits'] ){
-					foreach( $_POST['limits'] as $l ){
-						$attr = $product->get_attribute( $l[0] );
+		$args['post__in'] = BeRocket_AAPF::limits_filter( array() );
+		$args['post__in'] = BeRocket_AAPF::price_filter( $args['post__in'] );
+		$args['post_status'] = 'publish';
 
-						if( preg_match( "~(, )~", $attr ) ){
-							$attr = explode( ",", $attr );
-							$continue = true;
-							foreach( $attr as $attr_single ){
-								$attr_single = trim( $attr_single );
-								if( $attr_single >= $l[1] and $attr_single <= $l[2] ){
-									$continue = false;
-									break;
-								}
-							}
-							if( $continue ) continue 2;
-						}else{
-							if( $attr < $l[1] or $attr > $l[2] )
-								continue 2;
-						}
-					}
-				}
-				
-				if( @$_POST['price'] ){
-					if( $product_price < $_POST['price'][0] or $product_price > $_POST['price'][1] )
-						continue;
-				}
+        add_filter( 'posts_where', array( 'WC_QUERY', 'exclude_protected_products' ) );
 
-				$has_products = true;
+        // here we get max products to know if current page is not too big
+		$wp_query = new WP_Query( $args );
+
+        if ( $wp_rewrite->using_permalinks() and preg_match( "~/page/([0-9]+)~", $_POST['location'], $mathces ) ) {
+            $args['paged'] = min( $mathces[1], $wp_query->max_num_pages );
+            $wp_query = new WP_Query( $args );
+        } elseif( preg_match( "~paged?=([0-9]+)~", $_POST['location'], $mathces ) ) {
+            $args['paged'] = min( $mathces[1], $wp_query->max_num_pages );
+            $wp_query = new WP_Query( $args );
+        }
+
+		ob_start();
+		woocommerce_result_count();
+		$_RESPONSE['results_num_html'] = apply_filters( 'berocket_aapf_listener_results_num_text', ob_get_contents() );
+		ob_end_clean();
+
+		ob_start();
+		woocommerce_pagination();
+		$_RESPONSE['pagination_html'] = apply_filters( 'berocket_aapf_listener_pagination_html', ob_get_contents() );
+		ob_end_clean();
+
+		ob_start();
+		if ( $wp_query->have_posts() ) {
+			while ( $wp_query->have_posts() ) {
+				$wp_query->the_post();
 				woocommerce_get_template_part( 'content', 'product' );
 			}
 			wp_reset_postdata();
-		}
-
-		if( ! $has_products ){
+		} else {
 			echo apply_filters( 'berocket_aapf_listener_no_products_message', "<div class='no-products" . ( ( $br_options['no_products_class'] ) ? ' '.$br_options['no_products_class'] : '' ) . "'>" . $br_options['no_products_message'] . "</div>" );
 		}
+		$_RESPONSE['products'] = ob_get_contents();
+		ob_end_clean();
+
+		echo json_encode( $_RESPONSE );
+
         die();
 	}
 
@@ -446,4 +445,74 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 		$classes[] = 'product';
 		return apply_filters( 'berocket_aapf_add_product_class', $classes );
 	}
+
+	public static function pagination_args( $args = array() ) {
+        $args['base'] = str_replace( 999999999, '%#%', self::get_pagenum_link( 999999999 ) );
+		return $args;
+	}
+
+    // 99% copy of WordPress' get_pagenum_link.
+    public static function get_pagenum_link($pagenum = 1, $escape = true ) {
+        global $wp_rewrite;
+
+        $pagenum = (int) $pagenum;
+
+        $request = remove_query_arg( 'paged', preg_replace( "~".home_url()."~", "", $_POST['location'] ) );
+
+        $home_root = parse_url(home_url());
+        $home_root = ( isset($home_root['path']) ) ? $home_root['path'] : '';
+        $home_root = preg_quote( $home_root, '|' );
+
+        $request = preg_replace('|^'. $home_root . '|i', '', $request);
+        $request = preg_replace('|^/+|', '', $request);
+
+        if ( !$wp_rewrite->using_permalinks() ) {
+            $base = trailingslashit( get_bloginfo( 'url' ) );
+
+            if ( $pagenum > 1 ) {
+                $result = add_query_arg( 'paged', $pagenum, $base . $request );
+            } else {
+                $result = $base . $request;
+            }
+        } else {
+            $qs_regex = '|\?.*?$|';
+            preg_match( $qs_regex, $request, $qs_match );
+
+            if ( !empty( $qs_match[0] ) ) {
+                $query_string = $qs_match[0];
+                $request = preg_replace( $qs_regex, '', $request );
+            } else {
+                $query_string = '';
+            }
+
+            $request = preg_replace( "|$wp_rewrite->pagination_base/\d+/?$|", '', $request);
+            $request = preg_replace( '|^' . preg_quote( $wp_rewrite->index, '|' ) . '|i', '', $request);
+            $request = ltrim($request, '/');
+
+            $base = trailingslashit( get_bloginfo( 'url' ) );
+
+            if ( $wp_rewrite->using_index_permalinks() && ( $pagenum > 1 || '' != $request ) )
+                $base .= $wp_rewrite->index . '/';
+
+            if ( $pagenum > 1 ) {
+                $request = ( ( !empty( $request ) ) ? trailingslashit( $request ) : $request ) . user_trailingslashit( $wp_rewrite->pagination_base . "/" . $pagenum, 'paged' );
+            }
+
+            $result = $base . $request . $query_string;
+        }
+
+        /**
+         * Filter the page number link for the current request.
+         *
+         * @since 2.5.0
+         *
+         * @param string $result The page number link.
+         */
+        $result = apply_filters( 'get_pagenum_link', $result );
+
+        if ( $escape )
+            return esc_url( $result );
+        else
+            return esc_url_raw( $result );
+    }
 }

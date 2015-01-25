@@ -1,13 +1,26 @@
 <?php
 
+
 if( ! function_exists( 'br_get_template_part' ) ){
-	function br_get_template_part( $name = '' ){
+    /**
+     * Public function to get plugin's template
+     *
+     * @param string $name Template name to search for
+     *
+     * @return void
+     */
+    function br_get_template_part( $name = '' ){
 		BeRocket_AAPF::br_get_template_part( $name );
 	}
 }
 
 if( ! function_exists( 'br_aapf_get_attributes' ) ) {
-	function br_aapf_get_attributes() {
+    /**
+     * Get all possible woocommerce attribute taxonomies
+     *
+     * @return mixed|void
+     */
+    function br_aapf_get_attributes() {
 		$attribute_taxonomies = wc_get_attribute_taxonomies();
 		$attributes           = array();
 
@@ -22,7 +35,12 @@ if( ! function_exists( 'br_aapf_get_attributes' ) ) {
 }
 
 if( ! function_exists( 'br_parse_order_by' ) ){
-	function br_aapf_parse_order_by( &$args ){
+    /**
+     * br_aapf_parse_order_by - parsing order by data and saving to $args array that was passed into
+     *
+     * @param $args
+     */
+    function br_aapf_parse_order_by( &$args ){
 		$orderby = $_POST['orderby'];
 		$order = "ASK";
 		if( @ preg_match( "/-/", $orderby ) ){
@@ -72,7 +90,14 @@ if( ! function_exists( 'br_parse_order_by' ) ){
 }
 
 if( ! function_exists( 'br_aapf_args_parser' ) ){
-	function br_aapf_args_parser( $args = array() ) {
+    /**
+     * br_aapf_args_parser - extend $args based on passed filters
+     *
+     * @param array $args
+     *
+     * @return array
+     */
+    function br_aapf_args_parser( $args = array() ) {
 		$attributes_terms = $tax_query = array();
 		$attributes       = apply_filters( 'berocket_aapf_listener_get_attributes', br_aapf_get_attributes() );
 
@@ -138,7 +163,10 @@ if( ! function_exists( 'br_aapf_args_parser' ) ){
 }
 
 if( ! function_exists( 'br_aapf_args_converter' ) ) {
-	function br_aapf_args_converter() {
+    /**
+     * convert args-url to normal filters
+     */
+    function br_aapf_args_converter() {
 		if ( preg_match( "~\|~", $_GET['filters'] ) ) {
 			$filters = explode( "|", $_GET['filters'] );
 		} else {

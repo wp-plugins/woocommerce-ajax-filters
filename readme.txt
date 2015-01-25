@@ -5,7 +5,7 @@ Donate link: http://berocket.com
 Tags: filters, product filters, ajax product filters, advanced product filters, woocommerce filters, woocommerce product filters, woocommerce ajax product filters
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 1.0.4
+Stable tag: 1.0.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,15 +17,15 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 
 = Features: =
 
-* No reloading, only ajax
-* Slider, radio or checkbox
-* No spamming with widgets in admin, 1 widget - multiple instances
-* SEO friendly urls
-* Filter visibility by product category. Different categories pages = different ( + global ) filters. One shop for everything
-* Can take control over sorting select to make it AJAXy
+* AJAX Filters, Pagination and Sorting!
+* Unlimited Filters
+* Multiple User Interface Elements
+* SEO Friendly Urls ( with HTML5 PushState )
+* Filter Visibility By Product Category And Globals.
 * Filter box height limit with scroll themes
 * Working great with custom widget area
-* Unlimited filters by product attributes
+* Drag and Drop Filter Building
+* And More...
 
 = Demo =
 http://woocommerce-product-filter.berocket.com
@@ -83,6 +83,16 @@ http://berocket.com/wp-plugins/product-filters
 ---
 
 == Changelog ==
+
+= 1.0.4.1 =
+* Enhancement - Adding AJAX for pagination.
+* Enhancement - Adding PushState for pagination.
+* Enhancement/Fix - Pagination wasn't updating when filters used.
+* Enhancement/Fix - Text with amount of results (Eg "Showing all 2 results") wasn't updating after filters applied
+* Enhancement/Fix - When choosing Slider in admin Operator became hidden
+* Fix - All sliders except price wasn't working with SEO url
+* Fix - When changing attribute to/from price in admin all filters jumping
+* Fix - After filter applied all products was showed. Even those with Draft status.
 
 = 1.0.4 =
 * Enhancement - SEO friendly urls with possibility for users to share/bookmark their search. Will be shortened in future

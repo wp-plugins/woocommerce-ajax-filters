@@ -3,7 +3,13 @@
 		
 		var berocket_aapf_widget_product_filters = JSON.parse(the_ajax_script.berocket_aapf_widget_product_filters),
             berocket_aapf_widget_product_limits = [],
-            berocket_aapf_widget_product_price_limit = [];
+            berocket_aapf_widget_product_price_limit = [],
+            woocommerce_pagination_page = 1;
+
+        if( $('.woocommerce-pagination').hasClass('.woocommerce-pagination') ){
+            woocommerce_pagination_page = parseInt( $('.woocommerce-pagination .current').text() );
+            if( woocommerce_pagination_page < 1 ) woocommerce_pagination_page = 1;
+        }
 
 		function updateProducts( $el ){
 			$(the_ajax_script.products_holder_id).addClass('hide_products').append('<div class="berocket_aapf_widget_loading" />');
@@ -54,6 +60,10 @@
 				});
 			}
 
+            if( $('.woocommerce-pagination').hasClass( '.woocommerce-pagination' ) ){
+                $('.woocommerce-pagination ul.page-numbers li a');
+            }
+
             args = {
                 terms: berocket_aapf_widget_product_filters,
                 price: berocket_aapf_widget_product_price_limit,
@@ -65,12 +75,35 @@
 
             if( the_ajax_script.seo_friendly_urls && 'history' in window && 'pushState' in history ) {
                 updateLocation(args);
+                args.location = location.href;
+            }else{
+                args.location = the_ajax_script.current_page_url;
+
+                cur_page = $('.woocommerce-pagination span.current').text();
+                if( prev_page = location.href.replace(/.+\/page\/([0-9]+).+/, "$1") ){
+                    if( ! parseInt( cur_page ) ){
+                        cur_page = prev_page;
+                    }
+                    args.location = args.location.replace(/\/?/,"") + "/page/" + cur_page + "/";
+                }else if( prev_page = location.href.replace(/.+paged?=([0-9]+).+/, "$1") ){
+                    if( ! parseInt( cur_page ) ){
+                        cur_page = prev_page;
+                    }
+                    args.location = args.location.replace(/\/?/,"") + "?page=" + cur_page + "";
+                }
             }
 
             $.post(the_ajax_script.ajaxurl, args, function (data) {
-                $(the_ajax_script.products_holder_id).html(data).removeClass('hide_products');
+                $('.woocommerce-result-count').html( data.results_num_html );
+                $('.woocommerce-pagination').remove();
+                $(the_ajax_script.products_holder_id)
+                    .after( data.pagination_html )
+                    .html(data.products)
+                    .removeClass('hide_products');
                 $('.berocket_aapf_widget_loading').remove();
-            });
+
+                pagin_action_init();
+            }, "json");
 		}
 
         function updateLocation( args ){
@@ -100,21 +133,51 @@
                 });
             }
 
-            var uri = '';
+            var uri = the_ajax_script.current_page_url;
+
             if( uri_request_array.length ){
                 $(uri_request_array).each(function (i,o){
                     if( uri_request ) uri_request += "|";
                     uri_request += o;
                 });
+            }
 
-                uri = the_ajax_script.current_page_url + "?filters=" + uri_request;
-            } else {
-                uri = the_ajax_script.current_page_url;
+            cur_page = $('.woocommerce-pagination span.current').text();
+            if( prev_page = location.href.replace(/.+\/page\/([0-9]+).+/, "$1") ){
+                if( ! parseInt( cur_page ) ){
+                    cur_page = prev_page;
+                }
+                uri = uri.replace(/\/?$/,"") + "/page/" + cur_page + "/";
+                if( uri_request ){
+                    uri = uri + "?filters=" + uri_request;
+                }
+            }else if( prev_page = location.href.replace(/.+paged?=([0-9]+).+/, "$1") ){
+                if( ! parseInt( cur_page ) ){
+                    cur_page = prev_page;
+                }
+                uri = uri.replace(/\/?$/,"") + "?page=" + cur_page + "";
+                if( uri_request ){
+                    uri = uri + "&filters=" + uri_request;
+                }
+            }else{
+                if( uri_request ){
+                    uri = uri + "?filters=" + uri_request;
+                }
             }
 
             var stateParameters = { BeRocket: "Rules" };
             history.pushState(stateParameters, "BeRocket Rules", uri);
             history.pathname = uri;
+        }
+
+        function pagin_action_init(){
+            // Take control over (default) pagination, make it AJAXy and work with filters
+            $('.woocommerce-pagination').on('click', 'a', function (event) {
+                event.preventDefault();
+                $('.woocommerce-pagination span.current').removeClass('current');
+                $(this).after("<span class='page-numbers current'>"+$(this).text()+"</span>").remove();
+                updateProducts(false);
+            });
         }
 		
 		$('.berocket_aapf_widget').on("change", "input, select", function(){
@@ -150,14 +213,15 @@
 				scrollInertia: 300
 			});
 		});
-
-        // Option to take control over (default) sorting function, make it AJAXy and work with filters
+        // Option to take control over (default) sorting, make it AJAXy and work with filters
         if( the_ajax_script.control_sorting ) {
             $('.woocommerce-ordering').on('submit', function (event) {
                 event.preventDefault();
                 updateProducts(false);
             });
         }
+
+        pagin_action_init();
 		
 	});
 })(jQuery);

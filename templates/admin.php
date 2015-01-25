@@ -24,7 +24,7 @@
 		</select>
 	</label>
 </p>
-<p <?php if ( $instance['attribute'] == 'price' ) echo " style='display: none;'"; ?> >
+<p <?php if ( $instance['attribute'] == 'price' or $instance['type'] == 'slider' ) echo " style='display: none;'"; ?> >
 	<label>Operator:
 		<select id="<?php echo $this->get_field_id( 'operator' ); ?>" name="<?php echo $this->get_field_name( 'operator' ); ?>" class="berocket_aapf_widget_admin_operator_select">
 			<option <?php if ($instance['operator'] == 'AND') echo 'selected'; ?> value="AND">AND</option>

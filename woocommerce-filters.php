@@ -3,7 +3,7 @@
 	Plugin Name: Advanced AJAX Product Filters for WooCommerce
 	Plugin URI: http://berocket.com/wp-plugins/product-filters
 	Description: Advanced AJAX Product Filters for WooCommerce
-	Version: 1.0.4
+	Version: 1.0.4.1
 	Author: BeRocket
 	Author URI: http://berocket.com
 */
@@ -16,6 +16,12 @@ require_once dirname( __FILE__ ).'/includes/functions.php';
 /**
  * Class BeRocket_AAPF
  */
+
+function debug( $var ){
+	echo "<pre>";
+	print_r( $var );
+	echo "</pre>";
+}
 
 class BeRocket_AAPF {
 
@@ -50,33 +56,106 @@ class BeRocket_AAPF {
 	}
 
 	public static function apply_user_filters( $query ){
-		if( $query->is_main_query() and ( $query->get( 'post_type' ) == 'product' or $query->get( 'product_cat' ) ) ){
+
+		if( $query->is_main_query() and
+		    ( $query->get( 'post_type' ) == 'product' or $query->get( 'product_cat' ) )
+			or
+			$query->is_page() && 'page' == get_option( 'show_on_front' ) && $query->get('page_id') == wc_get_page_id('shop')
+		){
 			$args = br_aapf_args_parser();
 
-			if( $_POST['price'] ){
-				$_GET['min_price'] = $_POST['price'][0];
-				$_GET['max_price'] = $_POST['price'][1];
-
+			if( @ $_POST['price'] ){
+				list( $_GET['min_price'], $_GET['max_price'] ) = $_POST['price'];
 				add_filter( 'loop_shop_post_in', array( 'WC_QUERY', 'price_filter' ) );
 			}
 
-			if( $args['meta_key'] ){
-				$query->set( 'meta_key', $args['meta_key'] );
+			if ( @ $_POST['limits'] ) {
+				add_filter( 'loop_shop_post_in', array( __CLASS__, 'limits_filter' ) );
 			}
-			if( $args['tax_query'] ) {
-				$query->set( 'tax_query', $args['tax_query'] );
-			}
-			if( $args['fields'] ) {
-				$query->set( 'fields', $args['fields'] );
-			}
-			if( $args['where'] ) {
-				$query->set( 'where', $args['where'] );
-			}
-			if( $args['join'] ) {
-				$query->set( 'join', $args['join'] );
+
+			$args_fields = array( 'meta_key', 'tax_query', 'fields', 'where', 'join', 'meta_query' );
+			foreach( $args_fields as $args_field ){
+				if( @ $args[$args_field] ){
+					$query->set( $args_field, $args[$args_field] );
+				}
 			}
 		}
+
 		return $query;
+	}
+
+	public static function limits_filter( $filtered_posts ){
+		global $wpdb;
+
+		if ( $_POST['limits'] ) {
+			$matched_products = array();
+
+			foreach ( $_POST['limits'] as $v ) {
+				$matched_products_query = $wpdb->get_results( $wpdb->prepare("
+		            SELECT DISTINCT ID, post_parent, post_type FROM $wpdb->posts
+					INNER JOIN $wpdb->term_relationships as tr ON ID = tr.object_id
+					INNER JOIN $wpdb->term_taxonomy as tt ON tt.term_taxonomy_id = tr.term_taxonomy_id
+					INNER JOIN $wpdb->terms as t ON t.term_id = tt.term_id
+					WHERE post_type IN ( 'product', 'product_variation' ) AND post_status = 'publish'
+					AND tt.taxonomy = %s AND t.slug BETWEEN %d AND %d
+				", $v[0], $v[1], $v[2] ), OBJECT_K );
+
+				if ( $matched_products_query ) {
+					foreach ( $matched_products_query as $product ) {
+						if ( $product->post_type == 'product' )
+							$matched_products[] = $product->ID;
+						if ( $product->post_parent > 0 && ! in_array( $product->post_parent, $matched_products ) )
+							$matched_products[] = $product->post_parent;
+					}
+				}
+			}
+
+			$matched_products = array_unique( $matched_products );
+
+			// Filter the id's
+			if ( sizeof( $filtered_posts ) == 0) {
+				$filtered_posts = $matched_products;
+			} else {
+				$filtered_posts = array_intersect( $filtered_posts, $matched_products );
+			}
+		}
+
+		return (array) $filtered_posts;
+	}
+
+	public static function price_filter( $filtered_posts ){
+		global $wpdb;
+
+		if ( $_POST['price'] ) {
+			$matched_products = array();
+			$min 	= floatval( $_POST['price'][0] );
+			$max 	= floatval( $_POST['price'][1] );
+
+			$matched_products_query = apply_filters( 'woocommerce_price_filter_results', $wpdb->get_results( $wpdb->prepare("
+	        	SELECT DISTINCT ID, post_parent, post_type FROM $wpdb->posts
+				INNER JOIN $wpdb->postmeta ON ID = post_id
+				WHERE post_type IN ( 'product', 'product_variation' ) AND post_status = 'publish' AND meta_key = %s AND meta_value BETWEEN %d AND %d
+			", '_price', $min, $max ), OBJECT_K ), $min, $max );
+
+			if ( $matched_products_query ) {
+				foreach ( $matched_products_query as $product ) {
+					if ( $product->post_type == 'product' )
+						$matched_products[] = $product->ID;
+					if ( $product->post_parent > 0 && ! in_array( $product->post_parent, $matched_products ) )
+						$matched_products[] = $product->post_parent;
+				}
+			}
+
+			// Filter the id's
+			if ( sizeof( $filtered_posts ) == 0) {
+				$filtered_posts = $matched_products;
+			} else {
+				$filtered_posts = array_intersect( $filtered_posts, $matched_products );
+			}
+
+		}
+
+		return (array) $filtered_posts;
 	}
 
 	/**
