@@ -5,7 +5,7 @@ Donate link: http://berocket.com
 Tags: filters, product filters, ajax product filters, advanced product filters, woocommerce filters, woocommerce product filters, woocommerce ajax product filters
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 1.0.4.1
+Stable tag: 1.0.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -83,6 +83,10 @@ http://berocket.com/wp-plugins/product-filters
 ---
 
 == Changelog ==
+
+= 1.0.4.2 =
+* Enhancement/Fix - Better support for SEO urls with permalinks on/off
+* Fix - Critical bug that was returning incorrect products.
 
 = 1.0.4.1 =
 * Enhancement - Adding AJAX for pagination.

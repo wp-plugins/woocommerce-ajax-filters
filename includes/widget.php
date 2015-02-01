@@ -40,10 +40,10 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 	 * @param array $instance
 	 */
 	function widget( $args, $instance ) {
-		if( !is_shop() and !is_product_category() ) return;
+		if( !is_shop() and !is_product_category() ) return false;
 
 		$br_options = apply_filters( 'berocket_aapf_listener_br_options', get_option('br_filters_options') );
-		if( @ $br_options['filters_turn_off'] ) return;
+		if( @ $br_options['filters_turn_off'] ) return false;
 
 		global $wp_query, $wp;
         
@@ -51,8 +51,10 @@ class BeRocket_AAPF_Widget extends WP_Widget {
         wp_enqueue_style( 'berocket_aapf_widget-style' );
 
 		/* font awesome */
+        /* not ready for release yet
 		wp_register_style( 'berocket_aapf_widget-font-awesome', plugins_url( '../css/font-awesome.min.css', __FILE__ ) );
         wp_enqueue_style( 'berocket_aapf_widget-font-awesome' );
+        */
 
         /* custom scrollbar */
         wp_enqueue_script( 'berocket_aapf_widget-scroll-script', plugins_url( '../js/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js', __FILE__ ), array( 'jquery' ) );
@@ -61,7 +63,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 
 		wp_enqueue_script( 'jquery-ui-core' );
 		wp_enqueue_script( 'jquery-ui-slider' );
-		wp_enqueue_script( 'berocket_aapf_widget-script', plugins_url( '../js/widget.js', __FILE__ ), array( 'jquery' ) );
+		wp_enqueue_script( 'berocket_aapf_widget-script', plugins_url( '../js/widget.min.js', __FILE__ ), array( 'jquery' ) );
 		wp_enqueue_script( 'berocket_aapf_widget-hack-script', plugins_url( '../js/mobiles.min.js', __FILE__ ), array( 'jquery' ) );
 
 		$wp_query_product_cat = '-1';
@@ -374,7 +376,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 	 */
 	public static function listener(){
 		global $wp_query, $wp_rewrite;
-		$br_options = apply_filters( 'berocket_aapf_listener_br_options', get_option('br_filters_options') );
+        $br_options = apply_filters( 'berocket_aapf_listener_br_options', get_option('br_filters_options') );
 
 		add_filter( 'post_class', array( __CLASS__, 'add_product_class' ) );
 		add_filter( 'woocommerce_pagination_args', array( __CLASS__, 'pagination_args' ) );
@@ -384,13 +386,15 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 		$args['post__in'] = BeRocket_AAPF::limits_filter( array() );
 		$args['post__in'] = BeRocket_AAPF::price_filter( $args['post__in'] );
 		$args['post_status'] = 'publish';
+		$args['post_type'] = 'product';
 
-        add_filter( 'posts_where', array( 'WC_QUERY', 'exclude_protected_products' ) );
+        // it is killing post_type=product, not sure why
+        //add_filter( 'posts_where', array( 'WC_QUERY', 'exclude_protected_products' ) );
+
+        $wp_query = new WP_Query( $args );
 
         // here we get max products to know if current page is not too big
-		$wp_query = new WP_Query( $args );
-
-        if ( $wp_rewrite->using_permalinks() and preg_match( "~/page/([0-9]+)~", $_POST['location'], $mathces ) ) {
+		if ( $wp_rewrite->using_permalinks() and preg_match( "~/page/([0-9]+)~", $_POST['location'], $mathces ) ) {
             $args['paged'] = min( $mathces[1], $wp_query->max_num_pages );
             $wp_query = new WP_Query( $args );
         } elseif( preg_match( "~paged?=([0-9]+)~", $_POST['location'], $mathces ) ) {

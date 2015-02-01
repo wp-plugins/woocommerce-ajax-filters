@@ -3,7 +3,7 @@
 	Plugin Name: Advanced AJAX Product Filters for WooCommerce
 	Plugin URI: http://berocket.com/wp-plugins/product-filters
 	Description: Advanced AJAX Product Filters for WooCommerce
-	Version: 1.0.4.1
+	Version: 1.0.4.2
 	Author: BeRocket
 	Author URI: http://berocket.com
 */
@@ -16,12 +16,6 @@ require_once dirname( __FILE__ ).'/includes/functions.php';
 /**
  * Class BeRocket_AAPF
  */
-
-function debug( $var ){
-	echo "<pre>";
-	print_r( $var );
-	echo "</pre>";
-}
 
 class BeRocket_AAPF {
 
