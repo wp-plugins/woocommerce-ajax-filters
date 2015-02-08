@@ -51,10 +51,10 @@ http://woocommerce-product-filter.berocket.com
 
 
 = Shortcode: =
-In editor `[br_filters attribute=price type=slider title="Price Filter"]`
-In PHP `do_shortcode('[br_filters attribute=price type=slider title="Price Filter"]');`
+* In editor `[br_filters attribute=price type=slider title="Price Filter"]`
+* In PHP `do_shortcode('[br_filters attribute=price type=slider title="Price Filter"]');`
 
-** Options **
+= Shortcode Options =
 * `attribute` - product attribute, eg price or length. Don't forget that woocommerce adding pa_ suffix for created attributes.
  So if you create new attribute `jump` its name is `pa_jump`
 * `type` - checkbox, radio, slider or select
@@ -85,7 +85,7 @@ In PHP `do_shortcode('[br_filters attribute=price type=slider title="Price Filte
 * Products selector - Selector for tag that is holding products
 * Sorting control - Take control over WooCommerce's sorting selectbox
 * SEO friendly urls - url will be changed when filter is selected/changed
-* Turn all filters off - If you want to hide filters without losing current configuration just turn them off  
+* Turn all filters off - If you want to hide filters without losing current configuration just turn them off
 
 
 
