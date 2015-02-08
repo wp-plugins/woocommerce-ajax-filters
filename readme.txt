@@ -54,7 +54,7 @@ http://woocommerce-product-filter.berocket.com
 * In editor `[br_filters attribute=price type=slider title="Price Filter"]`
 * In PHP `do_shortcode('[br_filters attribute=price type=slider title="Price Filter"]');`
 
-= Shortcode Options =
+= Shortcode Options: =
 * `attribute` - product attribute, eg price or length. Don't forget that woocommerce adding pa_ suffix for created attributes.
  So if you create new attribute `jump` its name is `pa_jump`
 * `type` - checkbox, radio, slider or select
