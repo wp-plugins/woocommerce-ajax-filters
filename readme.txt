@@ -31,9 +31,6 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 = Demo =
 http://woocommerce-product-filter.berocket.com
 
-= Plugin Documentation Page =
-http://berocket.com/wp-plugins/product-filters
-
 = How It Works: =
 
 = Step 1: =
@@ -88,7 +85,7 @@ In PHP `do_shortcode('[br_filters attribute=price type=slider title="Price Filte
 * Products selector - Selector for tag that is holding products
 * Sorting control - Take control over WooCommerce's sorting selectbox
 * SEO friendly urls - url will be changed when filter is selected/changed
-* Turn all filters off - If you want to hide filters without losing current configuration just turn them off
+* Turn all filters off - If you want to hide filters without losing current configuration just turn them off  
 
 
 
