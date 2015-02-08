@@ -3,7 +3,7 @@
 		<select>
 			<option data-taxonomy='<?=$terms[0]->taxonomy?>' value=''>Any</option>
 			<?php foreach( $terms as $term ): ?>
-			<option data-term_id='<?=$term->term_id?>' data-taxonomy='<?=$term->taxonomy?>'
+			<option data-term_id='<?=$term->term_id?>' data-taxonomy='<?=$term->taxonomy?>' data-operator='<?=$operator?>'
 					<?php
 					if( $_POST['terms'] ){
 						foreach( $_POST['terms'] as $p_term ){
@@ -14,7 +14,7 @@
 						}
 					}
 					?>
-			        data-operator='<?=$operator?>'><?=$term->name?></option>
+			        ><?=$term->name?></option>
 			<?php endforeach; ?>
 		</select>
 	</span>

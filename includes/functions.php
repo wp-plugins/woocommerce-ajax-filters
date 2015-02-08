@@ -41,13 +41,14 @@ if( ! function_exists( 'br_parse_order_by' ) ){
      * @param $args
      */
     function br_aapf_parse_order_by( &$args ){
-		$orderby = $_POST['orderby'];
+		$orderby = $_GET['orderby'] = $_POST['orderby'];
 		$order = "ASK";
 		if( @ preg_match( "/-/", $orderby ) ){
 			list( $orderby, $order ) = explode( "-", $orderby );
 		}
 
-		if( @ $orderby and @ $order ) {
+        // needed for woocommerce sorting funtionality
+        if( @ $orderby and @ $order ) {
 
 			// Get ordering from query string unless defined
 			$orderby = strtolower( $orderby );
@@ -173,7 +174,7 @@ if( ! function_exists( 'br_aapf_args_converter' ) ) {
 			$filters[0] = $_GET['filters'];
 		}
 
-		foreach ( $filters as $filter ) {
+        foreach ( $filters as $filter ) {
 			list( $attribute, $value ) = explode( "=", $filter );
 
 			if ( $attribute == 'price' ) {
@@ -181,8 +182,8 @@ if( ! function_exists( 'br_aapf_args_converter' ) ) {
 			} elseif ( $attribute == 'order' ) {
 				$_GET['orderby'] = $value;
 			} else {
-				$term_or_limit = explode( "^", $value );
-				if ( $term_or_limit[1] == 'OR' or $term_or_limit[1] == 'AND' ) {
+                $term_or_limit = explode( "^", $value );
+                if ( $term_or_limit[1] == 'OR' or $term_or_limit[1] == 'AND' ) {
 					$_POST['terms'][] = array( "pa_" . $attribute, $term_or_limit[0], $term_or_limit[1] );
 				} else {
 					$_POST['limits'][] = array( "pa_" . $attribute, $term_or_limit[0], $term_or_limit[1] );

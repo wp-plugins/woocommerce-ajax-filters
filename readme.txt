@@ -5,7 +5,7 @@ Donate link: http://berocket.com
 Tags: filters, product filters, ajax product filters, advanced product filters, woocommerce filters, woocommerce product filters, woocommerce ajax product filters
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 1.0.4.2
+Stable tag: 1.0.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,6 +22,7 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 * Multiple User Interface Elements
 * SEO Friendly Urls ( with HTML5 PushState )
 * Filter Visibility By Product Category And Globals.
+* Accessible through shortcode
 * Filter box height limit with scroll themes
 * Working great with custom widget area
 * Drag and Drop Filter Building
@@ -52,6 +53,20 @@ http://berocket.com/wp-plugins/product-filters
 * That's it =)
 
 
+= Shortcode: =
+In editor `[br_filters attribute=price type=slider title="Price Filter"]`
+In PHP `do_shortcode('[br_filters attribute=price type=slider title="Price Filter"]');`
+
+** Options **
+* `attribute` - product attribute, eg price or length. Don't forget that woocommerce adding pa_ suffix for created attributes.
+ So if you create new attribute `jump` its name is `pa_jump`
+* `type` - checkbox, radio, slider or select
+* `operator` - OR or AND
+* `title` - whatever you want to see as title. Can be empty
+* `product_cat` - parent category id
+* `cat_propagation` - should we propagate this filter to child categories? set 1 to turn this on
+* `height` - max filter box height. When height is met scroll will be added
+* `scroll_theme` - pretty clear name, scroll theme. Will be used if height is set and real height of box is more
 
 
 = Advanced Settings (Widget area): =
@@ -65,6 +80,15 @@ http://berocket.com/wp-plugins/product-filters
 * Scroll theme - if "Filter Box Height" is set and box length is more than "Filter Box Height" scroll appear and
  how it looks depends on the theme you choose.
 
+
+= Advanced Settings (Plugin Settings): =
+* Plugin settings can be found in admin area, WooCommerce -> Product Filters
+* "No Products" message - Text that will be shown if no products found
+* "No Products" class - Add class and use it to style "No Products" box
+* Products selector - Selector for tag that is holding products
+* Sorting control - Take control over WooCommerce's sorting selectbox
+* SEO friendly urls - url will be changed when filter is selected/changed
+* Turn all filters off - If you want to hide filters without losing current configuration just turn them off
 
 
 
@@ -83,6 +107,13 @@ http://berocket.com/wp-plugins/product-filters
 ---
 
 == Changelog ==
+
+= 1.0.4.2 =
+* Enhancement - shortcode added
+* Critical/Fix - If slider match none its values wasn't counted
+* Enhancement/Fix - Changing attribute data location from url to action-element, providing more flexibility for template
+* Enhancement/Templating - Using full products loop instead of including product content template
+* Fix - Pagination with SEO url issue
 
 = 1.0.4.2 =
 * Enhancement/Fix - Better support for SEO urls with permalinks on/off

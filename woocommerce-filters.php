@@ -3,7 +3,7 @@
 	Plugin Name: Advanced AJAX Product Filters for WooCommerce
 	Plugin URI: http://berocket.com/wp-plugins/product-filters
 	Description: Advanced AJAX Product Filters for WooCommerce
-	Version: 1.0.4.2
+	Version: 1.0.4.3
 	Author: BeRocket
 	Author URI: http://berocket.com
 */
@@ -35,8 +35,9 @@ class BeRocket_AAPF {
 		add_action( 'admin_menu', array( __CLASS__, 'br_add_options_page' ) );
 		add_action( 'admin_init', array( __CLASS__, 'register_br_options' ) );
 
-		if( @ $_GET['filters'] and ! @ defined( 'DOING_AJAX' ) ) {
-			br_aapf_args_converter();
+        add_shortcode( 'br_filters', array( __CLASS__, 'shortcode' ) );
+
+        if( @ $_GET['filters'] and ! @ defined( 'DOING_AJAX' ) ) {
 			add_filter( 'pre_get_posts', array( __CLASS__, 'apply_user_filters' ) );
 		}
 	}
@@ -45,20 +46,37 @@ class BeRocket_AAPF {
 		add_submenu_page( 'woocommerce', 'Product Filters Settings', 'Product Filters', 'manage_options', 'br-product-filters', array( __CLASS__, 'br_render_form' ) );
 	}
 
+	public static function shortcode( $atts = array() ){
+        $a = shortcode_atts(
+            array(
+                'attribute' => '',
+                'type' => 'checkbox',
+                'operator' => 'OR',
+                'title' => '',
+                'product_cat' => '',
+                'cat_propagation' => '',
+                'height' => 'auto',
+                'scroll_theme' => 'dark',
+            ), $atts );
+        if ( ! $a['attribute'] || ! $a['type']  ) return false;
+
+        BeRocket_AAPF_Widget::widget( array(), $a );
+	}
+
 	public static function br_render_form(){
 		include AAPF_TEMPLATE_PATH . "admin-settings.php";
 	}
 
 	public static function apply_user_filters( $query ){
-
-		if( $query->is_main_query() and
+        if( $query->is_main_query() and
 		    ( $query->get( 'post_type' ) == 'product' or $query->get( 'product_cat' ) )
 			or
 			$query->is_page() && 'page' == get_option( 'show_on_front' ) && $query->get('page_id') == wc_get_page_id('shop')
 		){
+            br_aapf_args_converter();
 			$args = br_aapf_args_parser();
 
-			if( @ $_POST['price'] ){
+            if( @ $_POST['price'] ){
 				list( $_GET['min_price'], $_GET['max_price'] ) = $_POST['price'];
 				add_filter( 'loop_shop_post_in', array( 'WC_QUERY', 'price_filter' ) );
 			}
@@ -82,7 +100,7 @@ class BeRocket_AAPF {
 		global $wpdb;
 
 		if ( $_POST['limits'] ) {
-			$matched_products = array();
+			$matched_products = array( 0 );
 
 			foreach ( $_POST['limits'] as $v ) {
 				$matched_products_query = $wpdb->get_results( $wpdb->prepare("
@@ -121,7 +139,7 @@ class BeRocket_AAPF {
 		global $wpdb;
 
 		if ( $_POST['price'] ) {
-			$matched_products = array();
+			$matched_products = array( 0 );
 			$min 	= floatval( $_POST['price'][0] );
 			$max 	= floatval( $_POST['price'][1] );
 
