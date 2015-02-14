@@ -1,0 +1,204 @@
+ul.products{
+	position: relative;
+	min-height: 500px;
+}
+
+ul.products.hide_products li{
+	visibility: hidden;
+	height: 20px;
+}
+
+.berocket_aapf_widget input[type="checkbox"] {
+    position: absolute;
+    left: -9999px;
+}
+
+.berocket_aapf_widget input[type="checkbox"] + label:before {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: url('../images/sprite.png') no-repeat;
+    cursor: pointer;
+}
+
+.berocket_aapf_widget input[type="checkbox"]:checked + label:before {
+    background-position: -14px 0;
+}
+
+.berocket_aapf_widget input[type="radio"] {
+    position: absolute;
+    left: -9999px;
+}
+
+.berocket_aapf_widget input[type="radio"] + label:before {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: url('../images/sprite_radio.png') no-repeat;
+}
+
+.berocket_aapf_widget input[type="radio"]:checked + label:before {
+    background-position: -14px 0;
+}
+
+.berocket_aapf_widget-title{
+	margin-bottom: 5px;
+	font-size: 14px;
+}
+
+ul.berocket_aapf_widget{
+	margin-bottom: 30px;
+}
+
+ul.berocket_aapf_widget li{
+	list-style-type: none;
+	padding-left: 0;
+}
+
+ul.berocket_aapf_widget li > span{
+	display: block;
+	cursor: pointer;
+	height: 20px;
+}
+
+ul.berocket_aapf_widget li > span:hover{
+	color: #000000;
+}
+
+.berocket_aapf_widget_loading{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: white url('../images/ajax-loader.gif') no-repeat center center;
+	z-index: 10000;
+}
+
+.no-products{
+	font-size: 26px;
+	font-weight: bold;
+	line-height: 6em;
+	text-align: center;
+}
+
+span.product-size{
+	color: #777;
+	display: block;
+	text-align: center;
+}
+
+.berocket_aapf_widget li.slider span.left, .berocket_aapf_widget li.slider span.right{
+	height: 40px;
+	float: left;
+	font-size: 12px;
+}
+
+.berocket_aapf_widget li.slider span.left input, .berocket_aapf_widget li.slider span.right input{
+	border: 1px solid #E8E8E8;
+	font-size: 13px;
+	font-style: italic;
+	padding: 4px 9px;
+	text-align: right;
+	width: 40px;
+    background: white;
+}
+
+.berocket_aapf_widget li.slider{
+	width: 80%;
+}
+
+.berocket_aapf_widget li.slider span.right{
+	float: right;
+}
+
+.berocket_aapf_widget li.slider span.slide{
+	clear: both;
+	height: auto;
+}
+
+.berocket_filter_slider.ui-widget-content, .berocket_filter_price_slider.ui-widget-content{
+	background: none repeat scroll 0 0 #b0b5b9;
+	border: 0 none;
+	border-radius: 0;
+	height: 4px;
+	padding: 0;
+}
+
+.berocket_filter_slider.ui-widget-content .ui-slider-range, .berocket_filter_price_slider.ui-widget-content .ui-slider-range{
+	background: none repeat scroll 0 0 #000000;
+}
+
+.berocket_filter_slider.ui-widget-content .ui-slider-handle, .berocket_filter_price_slider.ui-widget-content .ui-slider-handle{
+	background: url("../images/handler.png") no-repeat scroll center center / cover  transparent;
+	width: 12px;
+	height: 12px;
+	border: 0;
+	top: -4px;
+}
+
+.ui-slider {
+    position: relative;
+    text-align: left;
+}
+.ui-slider .ui-slider-handle {
+    position: absolute;
+    z-index: 2;
+    width: 1.2em;
+    height: 1.2em;
+    cursor: pointer;
+    -ms-touch-action: none;
+    touch-action: none;
+}
+.ui-slider .ui-slider-range {
+    position: absolute;
+    z-index: 1;
+    font-size: .7em;
+    display: block;
+    border: 0;
+    background-position: 0 0;
+}
+.ui-slider.ui-state-disabled .ui-slider-handle,
+.ui-slider.ui-state-disabled .ui-slider-range {
+    filter: inherit;
+}
+
+.ui-slider-horizontal {
+    height: .8em;
+}
+.ui-slider-horizontal .ui-slider-handle {
+    top: -.3em;
+    margin-left: -.6em;
+}
+.ui-slider-horizontal .ui-slider-range {
+    top: 0;
+    height: 100%;
+}
+.ui-slider-horizontal .ui-slider-range-min {
+    left: 0;
+}
+.ui-slider-horizontal .ui-slider-range-max {
+    right: 0;
+}
+
+.ui-slider-vertical {
+    width: .8em;
+    height: 100px;
+}
+.ui-slider-vertical .ui-slider-handle {
+    left: -.3em;
+    margin-left: 0;
+    margin-bottom: -.6em;
+}
+.ui-slider-vertical .ui-slider-range {
+    left: 0;
+    width: 100%;
+}
+.ui-slider-vertical .ui-slider-range-min {
+    bottom: 0;
+}
+.ui-slider-vertical .ui-slider-range-max {
+    top: 0;
+}
