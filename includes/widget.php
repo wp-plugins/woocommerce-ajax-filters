@@ -90,7 +90,8 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 				'products_holder_id' => $br_options['products_holder_id'],
 				'control_sorting'    => $br_options['control_sorting'],
 				'seo_friendly_urls'  => $br_options['seo_friendly_urls'],
-				'berocket_aapf_widget_product_filters'   => $post_temrs
+				'berocket_aapf_widget_product_filters'   => $post_temrs,
+                'user_func'          => $br_options['user_func'],
 			)
 		);
 

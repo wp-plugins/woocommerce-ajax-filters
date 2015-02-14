@@ -51,6 +51,35 @@
 					<span style="color:#666666;margin-left:2px;">If you want to hide filters without losing current configuration just turn them off</span>
 				</td>
 			</tr>
+            <tr>
+                <td colspan="2">
+                    <h2>JavaScript callback functions</h2>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Before Update:</th>
+                <td>
+                    <textarea style="min-width: 500px; height: 100px;" name="br_filters_options[user_func][before_update]"><?php echo @$options['user_func']['before_update'] ?></textarea>
+                    <br />
+                    <span style="color:#666666;margin-left:2px;">If you want to add own actions on filter activation, eg: alert('1');</span>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">On Update:</th>
+                <td>
+                    <textarea style="min-width: 500px; height: 100px;" name="br_filters_options[user_func][on_update]"><?php echo @$options['user_func']['on_update'] ?></textarea>
+                    <br />
+                    <span style="color:#666666;margin-left:2px;">If you want to add own actions right on products update. You can manipulate data here, try: data.products = 'Ha!';</span>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">After Update:</th>
+                <td>
+                    <textarea style="min-width: 500px; height: 100px;" name="br_filters_options[user_func][after_update]"><?php echo @$options['user_func']['after_update'] ?></textarea>
+                    <br />
+                    <span style="color:#666666;margin-left:2px;">If you want to add own actions after products updated, eg: alert('1');</span>
+                </td>
+            </tr>
 		</table>
 		<p class="submit">
 			<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />

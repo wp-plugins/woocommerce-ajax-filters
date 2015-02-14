@@ -5,7 +5,7 @@ Donate link: http://berocket.com
 Tags: filters, product filters, ajax product filters, advanced product filters, woocommerce filters, woocommerce product filters, woocommerce ajax product filters
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 1.0.4.3
+Stable tag: 1.0.4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,9 +30,6 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 
 = Demo =
 http://woocommerce-product-filter.berocket.com
-
-= Plugin Documentation Page =
-http://berocket.com/wp-plugins/product-filters
 
 = How It Works: =
 
@@ -108,7 +105,11 @@ http://berocket.com/wp-plugins/product-filters
 
 == Changelog ==
 
-= 1.0.4.2 =
+= 1.0.4.4 =
+* Enhancement - adding callback for before_update, on_update, after_update events.
+* Other small fixes
+
+= 1.0.4.3 =
 * Enhancement - shortcode added
 * Critical/Fix - If slider match none its values wasn't counted
 * Enhancement/Fix - Changing attribute data location from url to action-element, providing more flexibility for template
