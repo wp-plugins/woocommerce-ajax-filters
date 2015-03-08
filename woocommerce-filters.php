@@ -60,7 +60,8 @@ class BeRocket_AAPF {
             ), $atts );
         if ( ! $a['attribute'] || ! $a['type']  ) return false;
 
-        BeRocket_AAPF_Widget::widget( array(), $a );
+        $BeRocket_AAPF_Widget = new BeRocket_AAPF_Widget();
+        $BeRocket_AAPF_Widget->widget( array(), $a );
 	}
 
 	public static function br_render_form(){

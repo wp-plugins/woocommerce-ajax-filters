@@ -74,7 +74,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 
 		if( ! $br_options['products_holder_id'] ) $br_options['products_holder_id'] = 'ul.products';
 
-		if( $_POST['terms'] ){
+		if( @ $_POST['terms'] ){
 			$post_temrs = @ json_encode( $_POST['terms'] );
 		}else{
 			$post_temrs = "[]";
@@ -91,7 +91,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 				'control_sorting'    => $br_options['control_sorting'],
 				'seo_friendly_urls'  => $br_options['seo_friendly_urls'],
 				'berocket_aapf_widget_product_filters'   => $post_temrs,
-                'user_func'          => $br_options['user_func'],
+                'user_func'          => @ $br_options['user_func'],
 			)
 		);
 
@@ -269,7 +269,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 		return apply_filters( 'berocket_aapf_get_price_range', $price_range );
 	}
 
-	function get_filter_products( $wp_query_product_cat, $woocommerce_hide_out_of_stock_items ) {
+	public static function get_filter_products( $wp_query_product_cat, $woocommerce_hide_out_of_stock_items ) {
         global $wpdb;
 
         $from = $group = '';
@@ -283,7 +283,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 		}
 
 		if ( $woocommerce_hide_out_of_stock_items == 'yes' ) {
-            $from = " INNER JOIN {$wpdb->postmeta} ON ({$wpdb->posts}.ID = {$wpdb->postmeta}.post_id) ";
+            $from .= " INNER JOIN {$wpdb->postmeta} ON ({$wpdb->posts}.ID = {$wpdb->postmeta}.post_id) ";
             $where .= " AND ({$wpdb->posts}.post_status = 'publish' OR {$wpdb->posts}.post_status = 'private')
                 AND ( ({$wpdb->postmeta}.meta_key = '_stock_status' AND CAST({$wpdb->postmeta}.meta_value AS CHAR) = 'instock') ) ";
             $group = " GROUP BY {$wpdb->posts}.ID ";
