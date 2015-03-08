@@ -212,11 +212,11 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 			$slider_value1 = $min;
 			$slider_value2 = $max;
 
-			if( $attribute == 'price' and $_POST['price'] ){
+			if( $attribute == 'price' and @ $_POST['price'] ){
 				$slider_value1 = $_POST['price'][0];
 				$slider_value2 = $_POST['price'][1];
 			}
-			if( $attribute != 'price' and $_POST['limits'] ){
+			if( $attribute != 'price' and @ $_POST['limits'] ){
 				foreach( $_POST['limits'] as $p_limit ){
 					if( $p_limit[0] == $attribute ){
 						$slider_value1 = $p_limit[1];
@@ -276,8 +276,11 @@ class BeRocket_AAPF_Widget extends WP_Widget {
         $where = " AND ({$wpdb->posts}.post_status = 'publish') ";
 
 		if ( $wp_query_product_cat != - 1 ) {
+            $wp_query_product_cat = get_term_by( 'slug', $wp_query_product_cat, 'product_cat', OBJECT );
+            $wp_query_product_cat_id = $wp_query_product_cat->term_id;
+
             $from = " INNER JOIN {$wpdb->term_relationships} ON ({$wpdb->posts}.ID = {$wpdb->term_relationships}.object_id) ";
-            $where = " AND ( {$wpdb->term_relationships}.term_taxonomy_id IN ( {$wp_query_product_cat} ) )
+            $where = " AND ( {$wpdb->term_relationships}.term_taxonomy_id IN ( {$wp_query_product_cat_id} ) )
                 AND ({$wpdb->posts}.post_status = 'publish' OR {$wpdb->posts}.post_status = 'private') ";
             $group = " GROUP BY {$wpdb->posts}.ID ";
 		}
@@ -378,7 +381,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 		add_filter( 'post_class', array( __CLASS__, 'add_product_class' ) );
 		add_filter( 'woocommerce_pagination_args', array( __CLASS__, 'pagination_args' ) );
 
-		$args = apply_filters( 'berocket_aapf_listener_wp_query_args', $args );
+		$args = apply_filters( 'berocket_aapf_listener_wp_query_args', array() );
 
 		$args['post__in'] = BeRocket_AAPF::limits_filter( array() );
 		$args['post__in'] = BeRocket_AAPF::price_filter( $args['post__in'] );

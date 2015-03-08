@@ -3,7 +3,7 @@
 	Plugin Name: Advanced AJAX Product Filters for WooCommerce
 	Plugin URI: http://berocket.com/wp-plugins/product-filters
 	Description: Advanced AJAX Product Filters for WooCommerce
-	Version: 1.0.4.5
+	Version: 1.0.4.6
 	Author: BeRocket
 	Author URI: http://berocket.com
 */
@@ -100,7 +100,7 @@ class BeRocket_AAPF {
 	public static function limits_filter( $filtered_posts ){
 		global $wpdb;
 
-		if ( $_POST['limits'] ) {
+		if ( @ $_POST['limits'] ) {
 			$matched_products = array( 0 );
 
 			foreach ( $_POST['limits'] as $v ) {
@@ -139,7 +139,7 @@ class BeRocket_AAPF {
 	public static function price_filter( $filtered_posts ){
 		global $wpdb;
 
-		if ( $_POST['price'] ) {
+		if ( @ $_POST['price'] ) {
 			$matched_products = array( 0 );
 			$min 	= floatval( $_POST['price'][0] );
 			$max 	= floatval( $_POST['price'][1] );
