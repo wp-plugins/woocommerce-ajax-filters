@@ -78,7 +78,7 @@ http://woocommerce-product-filter.berocket.com
  how it looks depends on the theme you choose.
 
 
-= Advanced Settings (Plugin Settings): =
+= Plugin Settings: =
 * Plugin settings can be found in admin area, WooCommerce -> Product Filters
 * "No Products" message - Text that will be shown if no products found
 * "No Products" class - Add class and use it to style "No Products" box
@@ -86,7 +86,7 @@ http://woocommerce-product-filter.berocket.com
 * Sorting control - Take control over WooCommerce's sorting selectbox
 * SEO friendly urls - url will be changed when filter is selected/changed
 * Turn all filters off - If you want to hide filters without losing current configuration just turn them off
-
+* JavaScript callback functions: Before, On and After Update. Use it for better implementation into custom/specific theme
 
 
 == Installation ==
@@ -104,6 +104,10 @@ http://woocommerce-product-filter.berocket.com
 ---
 
 == Changelog ==
+
+= 1.0.4.5 =
+* Fix - attribute values from products on 2+ page wasn't used
+* Fix - not all attributes in use because of array key duplication issue
 
 = 1.0.4.4 =
 * Enhancement - adding callback for before_update, on_update, after_update events.

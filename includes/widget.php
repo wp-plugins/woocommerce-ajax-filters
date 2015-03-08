@@ -137,21 +137,18 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 			$price_range = BeRocket_AAPF_Widget::get_price_range( $wp_query_product_cat, $woocommerce_hide_out_of_stock_items );
 			if( ! $price_range ) return false;
 		}else{
-			$my_query = BeRocket_AAPF_Widget::get_filter_products( $wp_query_product_cat, $woocommerce_hide_out_of_stock_items );
-
-			if ( $my_query->have_posts() ) {
-				while ( $my_query->have_posts() ) {
-					$my_query->the_post();
-					$t_terms = get_the_terms( $my_query->post->ID, $attribute );
-					if( $t_terms ) {
-						foreach ( $t_terms as $key => $val ) {
-							$terms[ $key ]      = $val;
-							$sort_terms[ $key ] = $val->name;
-						}
+			$products = BeRocket_AAPF_Widget::get_filter_products( $wp_query_product_cat, $woocommerce_hide_out_of_stock_items );
+			
+			foreach ( $products as $product ) {
+				$t_terms = get_the_terms( $product->ID, $attribute );
+				if( $t_terms ) {
+					foreach ( $t_terms as $val ) {
+						$terms[ $val->term_id ]      = $val;
+						$sort_terms[ $val->term_id ] = $val->name;
 					}
 				}
 			}
-
+			
 			if ( @ count( $terms ) < 2 ) return false;
 
 			array_multisort( $sort_terms, $terms );
@@ -256,17 +253,14 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 
 	public static function get_price_range( $wp_query_product_cat, $woocommerce_hide_out_of_stock_items ){
 		$price_range = array();
-		$my_query = BeRocket_AAPF_Widget::get_filter_products( $wp_query_product_cat, $woocommerce_hide_out_of_stock_items );
+		$products = BeRocket_AAPF_Widget::get_filter_products( $wp_query_product_cat, $woocommerce_hide_out_of_stock_items );
 
-		if ( $my_query->have_posts() ) {
-			while ( $my_query->have_posts() ) {
-				$my_query->the_post();
-				$meta_values = get_post_meta( $my_query->post->ID, '_price' );
-				if ( $meta_values[0] or $woocommerce_hide_out_of_stock_items != 'yes' ) {
-					$price_range[] = $meta_values[0];
-				}
-			}
-		}
+        foreach ( $products as $product ) {
+            $meta_values = get_post_meta( $product->ID, '_price' );
+            if ( $meta_values[0] or $woocommerce_hide_out_of_stock_items != 'yes' ) {
+                $price_range[] = $meta_values[0];
+            }
+        }
 
 		if ( @ count( $price_range ) < 2 ) {
 			$price_range = false;
@@ -276,37 +270,39 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 	}
 
 	function get_filter_products( $wp_query_product_cat, $woocommerce_hide_out_of_stock_items ) {
-		$args = array(
-			'post_type'           => 'product',
-			'orderby'             => 'category',
-			'order'               => 'ASC',
-			'ignore_sticky_posts' => 1
-		);
+        global $wpdb;
+
+        $from = $group = '';
+        $where = " AND ({$wpdb->posts}.post_status = 'publish') ";
 
 		if ( $wp_query_product_cat != - 1 ) {
-			$args['tax_query'] = array(
-				array(
-					'taxonomy' => 'product_cat',
-					'field'    => 'slug',
-					'terms'    => array( $wp_query_product_cat ),
-				)
-			);
+            $from = " INNER JOIN {$wpdb->term_relationships} ON ({$wpdb->posts}.ID = {$wpdb->term_relationships}.object_id) ";
+            $where = " AND ( {$wpdb->term_relationships}.term_taxonomy_id IN ( {$wp_query_product_cat} ) )
+                AND ({$wpdb->posts}.post_status = 'publish' OR {$wpdb->posts}.post_status = 'private') ";
+            $group = " GROUP BY {$wpdb->posts}.ID ";
 		}
 
 		if ( $woocommerce_hide_out_of_stock_items == 'yes' ) {
-			$args['meta_query'] = array(
-				array(
-					'key'     => '_stock_status',
-					'value'   => 'instock',
-					'compare' => '='
-				)
-			);
+            $from = " INNER JOIN {$wpdb->postmeta} ON ({$wpdb->posts}.ID = {$wpdb->postmeta}.post_id) ";
+            $where .= " AND ({$wpdb->posts}.post_status = 'publish' OR {$wpdb->posts}.post_status = 'private')
+                AND ( ({$wpdb->postmeta}.meta_key = '_stock_status' AND CAST({$wpdb->postmeta}.meta_value AS CHAR) = 'instock') ) ";
+            $group = " GROUP BY {$wpdb->posts}.ID ";
 		}
 
-		$args = apply_filters( 'berocket_aapf_get_filter_products_args', $args );
+        $results = $wpdb->get_results("
+                SELECT SQL_CALC_FOUND_ROWS {$wpdb->posts}.ID
+                FROM {$wpdb->posts}
+                {$from}
+                WHERE 1=1
+                AND {$wpdb->posts}.post_type = 'product'
+                {$where}
+                {$group}
+                ORDER BY {$wpdb->posts}.post_date ASC"
+            , OBJECT );
 
-		return new WP_Query( $args );
+        return $results;
 	}
+
 	/**
 	 * Validating and updating widget data
 	 *
