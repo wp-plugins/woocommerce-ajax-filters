@@ -5,7 +5,7 @@ Donate link: http://berocket.com
 Tags: filters, product filters, ajax product filters, advanced product filters, woocommerce filters, woocommerce product filters, woocommerce ajax product filters
 Requires at least: 3.9
 Tested up to: 4.1.1
-Stable tag: 1.1.0
+Stable tag: 1.1.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -109,6 +109,19 @@ you set to order `by custom` you can drag&amp;drop values up and down and set yo
 ---
 
 == Changelog ==
+
+= 1.1.0.2 =
+* Fix - another js issue that stops plugin from work
+* Fix - order by name, name_numeric and attribute ID wasn't working
+
+= 1.1.0.1 =
+* Fix - js issue that stops plugin from work
+
+= 1.1.0 =
+* Enhancement - Show all values - on plugin settings page you can enable option to show all values no matter if they are used or not
+* Enhancement - Values order - you can set values order when editing attribute. You can set how to order (by id, name or custom). If
+you set to order `by custom` you can drag&amp;drop values up and down and set your own order.
+* Small fixes
 
 = 1.0.4.5 =
 * Enhancement - values order added. Now order of values can be controlled through attribute options
