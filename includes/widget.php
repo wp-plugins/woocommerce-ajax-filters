@@ -40,8 +40,6 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 	 * @param array $instance
 	 */
 	function widget( $args, $instance ) {
-		if( !is_shop() and !is_product_category() ) return false;
-
 		$br_options = apply_filters( 'berocket_aapf_listener_br_options', get_option('br_filters_options') );
 		if( @ $br_options['filters_turn_off'] ) return false;
 
