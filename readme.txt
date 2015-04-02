@@ -4,8 +4,8 @@ Contributors: dholovnia, berocket
 Donate link: http://berocket.com
 Tags: filters, product filters, ajax product filters, advanced product filters, woocommerce filters, woocommerce product filters, woocommerce ajax product filters
 Requires at least: 3.9
-Tested up to: 4.1
-Stable tag: 1.0.4.6
+Tested up to: 4.1.1
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,22 +32,14 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 http://woocommerce-product-filter.berocket.com
 
 = How It Works: =
+*check installation*
 
-= Step 1: =
-* First you need to add attributes to the products ( WooCommerce plugin should be installed and activated already )
-* Go to Admin area -> Products -> Attributes and add attributes your products will have, add them all
-* Click attribute's name where type is select and add values to it. Predefine product options
-* Go to your products and add attributes to each of them
 
-= Step 2: =
-* Install and activate plugin
-* Go to Admin area -> Appearance -> Widgets
-* In Available Widgets ( left side of the screen ) find AJAX Product Filters
-* Drag it to Sidebar you choose for it
-* Enter title, choose attribute that will be used for filtering products, choose filter type,
- choose operator( whether product should have all selected values (AND) or one of them (OR) ),
-* Click save and go to your shop to check how it work.
-* That's it =)
+= New in recent version: =
+* Show all values - on plugin settings page you can enable option to show all values no matter if they are used or not
+* Values order - you can set values order when editing attribute. You can set how to order (by id, name or custom). If
+you set to order `by custom` you can drag&amp;drop values up and down and set your own order.
+* Fixes
 
 
 = Shortcode: =
@@ -78,7 +70,7 @@ http://woocommerce-product-filter.berocket.com
  how it looks depends on the theme you choose.
 
 
-= Plugin Settings: =
+= Advanced Settings (Plugin Settings): =
 * Plugin settings can be found in admin area, WooCommerce -> Product Filters
 * "No Products" message - Text that will be shown if no products found
 * "No Products" class - Add class and use it to style "No Products" box
@@ -86,13 +78,26 @@ http://woocommerce-product-filter.berocket.com
 * Sorting control - Take control over WooCommerce's sorting selectbox
 * SEO friendly urls - url will be changed when filter is selected/changed
 * Turn all filters off - If you want to hide filters without losing current configuration just turn them off
-* JavaScript callback functions: Before, On and After Update. Use it for better implementation into custom/specific theme
+
 
 
 == Installation ==
 
-1. Install WooCommerce AJAX Filters either via the WordPress.org plugin directory, or by uploading the files to your server
-2. Activating WooCommerce AJAX Filters and you're ready to go!
+= Step 1: =
+* First you need to add attributes to the products ( WooCommerce plugin should be installed and activated already )
+* Go to Admin area -> Products -> Attributes and add attributes your products will have, add them all
+* Click attribute's name where type is select and add values to it. Predefine product options
+* Go to your products and add attributes to each of them
+
+= Step 2: =
+* Install and activate plugin
+* Go to Admin area -> Appearance -> Widgets
+* In Available Widgets ( left side of the screen ) find AJAX Product Filters
+* Drag it to Sidebar you choose for it
+* Enter title, choose attribute that will be used for filtering products, choose filter type,
+ choose operator( whether product should have all selected values (AND) or one of them (OR) ),
+* Click save and go to your shop to check how it work.
+* That's it =)
 
 
 == Frequently Asked Questions ==
@@ -105,12 +110,10 @@ http://woocommerce-product-filter.berocket.com
 
 == Changelog ==
 
-= 1.0.4.6 =
-* Fix - database query issue that brake plugin in categories
-
 = 1.0.4.5 =
-* Fix - attribute values from products on 2+ page wasn't used
-* Fix - not all attributes in use because of array key duplication issue
+* Enhancement - values order added. Now order of values can be controlled through attribute options
+* Enhancement/Fix - Better support for for category pages
+* Other small fixes
 
 = 1.0.4.4 =
 * Enhancement - adding callback for before_update, on_update, after_update events.
