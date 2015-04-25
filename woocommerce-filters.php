@@ -72,7 +72,7 @@ class BeRocket_AAPF {
         if( $query->is_main_query() and
 		    ( $query->get( 'post_type' ) == 'product' or $query->get( 'product_cat' ) )
 			or
-			$query->is_page() && 'page' == get_option( 'show_on_front' ) && $query->get('page_id') == wc_get_page_id('shop')
+			$query->is_page() && 'page' == get_option( 'show_on_front' ) && $query->queried_object_id == wc_get_page_id('shop')
 		){
             br_aapf_args_converter();
 			$args = br_aapf_args_parser();
