@@ -1,8 +1,9 @@
 <?php foreach( $terms as $term ): ?>
 <li>
 	<span>
-		<input type='radio' id='radio_<?=$term->term_id?>' name='radio_<?=$term->taxonomy?>_<?=$x?>'
-            data-term_id='<?=$term->term_id?>' data-taxonomy='<?=$term->taxonomy?>' data-operator='<?=$operator?>'
+		<input class="<?php echo $uo['class']['checkbox_radio'] ?>" type='radio' id='radio_<?php echo $term->term_id ?>'
+               name='radio_<?php echo $term->taxonomy ?>_<?php echo $x ?>' data-term_id='<?php echo $term->term_id ?>'
+               data-taxonomy='<?php echo $term->taxonomy ?>' data-operator='<?php echo $operator ?>'
 			<?php
 			if( @ $_POST['terms'] ){
 				foreach( $_POST['terms'] as $p_term ){
@@ -12,7 +13,7 @@
 					}
 				}
 			}
-			?> /><label for='radio_<?=$term->term_id?>'> <?=$term->name?></label>
+			?> /><label for='radio_<?php echo $term->term_id ?>'> <?php echo $term->name ?></label>
 	</span>
 </li>
 <?php endforeach; ?>

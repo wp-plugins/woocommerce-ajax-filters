@@ -1,9 +1,10 @@
 <li>
 	<span>
-		<select>
-			<option data-taxonomy='<?=$terms[0]->taxonomy?>' value=''>Any</option>
+		<select class="<?php echo $uo['class']['selectbox'] ?>">
+			<option data-taxonomy='<?php echo $terms[0]->taxonomy ?>' value=''>Any</option>
 			<?php foreach( $terms as $term ): ?>
-			<option data-term_id='<?=$term->term_id?>' data-taxonomy='<?=$term->taxonomy?>' data-operator='<?=$operator?>'
+			<option data-term_id='<?php echo $term->term_id ?>' data-taxonomy='<?php echo $term->taxonomy ?>'
+                    data-operator='<?php echo $operator ?>'
 					<?php
 					if( @ $_POST['terms'] ){
 						foreach( $_POST['terms'] as $p_term ){
@@ -14,7 +15,7 @@
 						}
 					}
 					?>
-			        ><?=$term->name?></option>
+			        ><?php echo $term->name ?></option>
 			<?php endforeach; ?>
 		</select>
 	</span>

@@ -9,11 +9,11 @@
 * @version  1.0.1
 */
 ?>
-<?php foreach( $terms as $term ):?>
+<?php foreach( $terms as $term ): ?>
 <li>
 	<span>
-		<input type='checkbox' id='radio_<?=$term->term_id?>'
-            data-term_id='<?=$term->term_id?>' data-taxonomy='<?=$term->taxonomy?>' data-operator='<?=$operator?>'
+		<input class="<?php echo $uo['class']['checkbox_radio'] ?>" type='checkbox' id='radio_<?php echo $term->term_id ?>'
+               data-term_id='<?php echo $term->term_id ?>' data-taxonomy='<?php echo $term->taxonomy ?>' data-operator='<?php echo $operator ?>'
 			<?php
 				if( @ $_POST['terms'] ){
 					foreach( $_POST['terms'] as $p_term ){
@@ -23,7 +23,7 @@
 						}
 					}
 				}
-			?> /><label for='radio_<?=$term->term_id?>'> <?=$term->name?></label>
+			?> /><label for='radio_<?php echo $term->term_id ?>'> <?php echo $term->name ?></label>
 	</span>
 </li>
 <?php endforeach; ?>

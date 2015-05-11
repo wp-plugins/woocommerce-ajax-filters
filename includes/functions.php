@@ -168,26 +168,42 @@ if( ! function_exists( 'br_aapf_args_converter' ) ) {
      * convert args-url to normal filters
      */
     function br_aapf_args_converter() {
-		if ( preg_match( "~\|~", $_GET['filters'] ) ) {
+        if ( preg_match( "~\|~", $_GET['filters'] ) ) {
 			$filters = explode( "|", $_GET['filters'] );
 		} else {
 			$filters[0] = $_GET['filters'];
 		}
 
         foreach ( $filters as $filter ) {
-			list( $attribute, $value ) = explode( "=", $filter );
+
+            if ( preg_match( "~\[~", $filter ) ) {
+                list( $attribute, $value ) = explode( "[", trim( preg_replace( "~\]~", "", $filter) ), 2 );
+                if ( preg_match( "~\-~", $value ) ) {
+                    $value    = explode( "-", $value );
+                    $operator = 'OR';
+                } elseif ( preg_match( "~\_~", $value ) ) {
+                    list( $min, $max ) = explode( "_", $value );
+                    $operator = '';
+                } else {
+                    $value    = explode( " ", $value );
+                    $operator = 'AND';
+                }
+            }else{
+                list( $attribute, $value ) = explode( "-", $filter, 2 );
+            }
 
 			if ( $attribute == 'price' ) {
-				$_POST['price'] = explode( "^", $value );
+				$_POST['price'] = array( $min, $max );
 			} elseif ( $attribute == 'order' ) {
 				$_GET['orderby'] = $value;
 			} else {
-                $term_or_limit = explode( "^", $value );
-                if ( $term_or_limit[1] == 'OR' or $term_or_limit[1] == 'AND' ) {
-					$_POST['terms'][] = array( "pa_" . $attribute, $term_or_limit[0], $term_or_limit[1] );
-				} else {
-					$_POST['limits'][] = array( "pa_" . $attribute, $term_or_limit[0], $term_or_limit[1] );
-				}
+                if ( $operator ) {
+                    foreach ( $value as $v ) {
+                        $_POST['terms'][] = array( "pa_" . $attribute, $v, $operator );
+                    }
+                } else {
+                    $_POST['limits'][] = array( "pa_" . $attribute, $min, $max );
+                }
 			}
 		}
 	}

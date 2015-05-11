@@ -5,7 +5,7 @@ Donate link: http://berocket.com
 Tags: filters, product filters, ajax product filters, advanced product filters, woocommerce filters, woocommerce product filters, woocommerce ajax product filters
 Requires at least: 3.9
 Tested up to: 4.1.1
-Stable tag: 1.1.0.2
+Stable tag: 1.1.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,11 +35,14 @@ http://woocommerce-product-filter.berocket.com
 *check installation*
 
 
-= New in recent version: =
-* Show all values - on plugin settings page you can enable option to show all values no matter if they are used or not
-* Values order - you can set values order when editing attribute. You can set how to order (by id, name or custom). If
-you set to order `by custom` you can drag&amp;drop values up and down and set your own order.
-* Fixes
+= New in recent version(s): =
+* Custom CSS class can be added per widget/filter
+* Update button - if added products will be updated only when user click Update button
+* Radio-box can be unselected by clicking it again
+* Urls are shortened using better structure to save filters
+* Fixed issue with shortened tags for shortcode.
+* Widget now has subcategories(hierarchy) to show all possible categories
+* Minor fixes
 
 
 = Shortcode: =
@@ -47,6 +50,7 @@ you set to order `by custom` you can drag&amp;drop values up and down and set yo
 * In PHP `do_shortcode('[br_filters attribute=price type=slider title="Price Filter"]');`
 
 = Shortcode Options: =
+* `widget_type` - filter or update_button
 * `attribute`(required) - product attribute, eg price or length. Don't forget that woocommerce adding pa_ suffix for created attributes.
  So if you create new attribute `jump` its name is `pa_jump`
 * `type`(required) - checkbox, radio, slider or select
@@ -60,6 +64,7 @@ you set to order `by custom` you can drag&amp;drop values up and down and set yo
 
 = Advanced Settings (Widget area): =
 
+* CSS Class - if you want to style filters in different manner you can add class here and use it in css
 * Product Category - if you want to pin your filter to category of the product this is good place to do it.
  Eg. You selling Phones and Cases for them. If user choose Category "Phones" filter "Have Wi-Fi" will appear
  but if user will choose "Cases" it will not be there as Admin set that "Have Wi-Fi" filter will be visible only on
@@ -109,6 +114,16 @@ you set to order `by custom` you can drag&amp;drop values up and down and set yo
 ---
 
 == Changelog ==
+
+= 1.1.0.3 =
+* Enhancement - Custom CSS class can be added per widget/filter
+* Enhancement - Update button. If added products will be updated only when user click Update button
+* Enhancement - Radio-box can be unselected by clicking it again
+* Enhancement/Fix - Urls are shortened using better structure to save filters. `~` symbol is not used now
+* Fix - issue with shortened tags for shortcode.
+* Fix - on widgets page widget now has subcategories(hierarchy)
+* Fix - all categories are visible, not only that have products inside(popular)
+* Minor fixes
 
 = 1.1.0.2 =
 * Fix - another js issue that stops plugin from work
