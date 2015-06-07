@@ -2,18 +2,18 @@
 Plugin Name: Advanced AJAX Product Filters
 Contributors: dholovnia, berocket
 Donate link: http://berocket.com
-Tags: filters, product filters, ajax product filters, advanced product filters, woocommerce filters, woocommerce product filters, woocommerce ajax product filters
+Tags: filters, product filters, ajax product filters, advanced product filters, woocommerce filters, woocommerce product filters, woocommerce ajax product filters, widget, plugin
 Requires at least: 3.9
-Tested up to: 4.1.1
-Stable tag: 1.1.0.4
+Tested up to: 4.2.2
+Stable tag: 1.1.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
+WooCommerce AJAX Product Filters - advanced AJAX product filters plugin for WooCommerce.
 
 == Description ==
 
-WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce. Add unlimited filters with one widget.
+WooCommerce AJAX Product Filters - advanced AJAX product filters plugin for WooCommerce. Add unlimited filters with one widget.
 
 = Features: =
 
@@ -28,21 +28,39 @@ WooCommerce AJAX Filters - advanced AJAX product filters plugin for WooCommerce.
 * Drag and Drop Filter Building
 * And More...
 
+= Additional Features in Paid Plugin: =
+
+* Filter by Attribute, Tag and Custom Taxonomy
+* Customize filters look through admin
+* Tag Cloud for Tag filter
+* Slider can use strings as a value
+* Filters can be collapsed by clicking on title, option to collapse filter on start
+* Price Filter Custom Min and Max values
+* Add custom CSS on admin settings page
+* And More...
+
+= Paid Plugin Link =
+http://berocket.com/product/woocommerce-ajax-products-filter
+
 = Demo =
 http://woocommerce-product-filter.berocket.com
+
 
 = How It Works: =
 *check installation*
 
 
-= New in recent version(s): =
+= In recent updates: =
+* Jump to first page when filter changed
+* Option to add text before and after price input fields
+* Now only used values must be shown, not all
+* Products are limited by category we are in
+* Products amount on the first page fixed
 * Custom CSS class can be added per widget/filter
 * Update button - if added products will be updated only when user click Update button
 * Radio-box can be unselected by clicking it again
-* Urls are shortened using better structure to save filters
-* Fixed issue with shortened tags for shortcode.
-* Widget now has subcategories(hierarchy) to show all possible categories
 * Minor fixes
+
 
 
 = Shortcode: =
@@ -50,7 +68,6 @@ http://woocommerce-product-filter.berocket.com
 * In PHP `do_shortcode('[br_filters attribute=price type=slider title="Price Filter"]');`
 
 = Shortcode Options: =
-* `widget_type` - filter or update_button
 * `attribute`(required) - product attribute, eg price or length. Don't forget that woocommerce adding pa_ suffix for created attributes.
  So if you create new attribute `jump` its name is `pa_jump`
 * `type`(required) - checkbox, radio, slider or select
@@ -64,7 +81,6 @@ http://woocommerce-product-filter.berocket.com
 
 = Advanced Settings (Widget area): =
 
-* CSS Class - if you want to style filters in different manner you can add class here and use it in css
 * Product Category - if you want to pin your filter to category of the product this is good place to do it.
  Eg. You selling Phones and Cases for them. If user choose Category "Phones" filter "Have Wi-Fi" will appear
  but if user will choose "Cases" it will not be there as Admin set that "Have Wi-Fi" filter will be visible only on
@@ -96,9 +112,10 @@ http://woocommerce-product-filter.berocket.com
 
 = Step 2: =
 * Install and activate plugin
-* Go to Admin area -> Appearance -> Widgets
+* First of all go to Admin area -> WooCommerce -> Product Filter and check what global options you can manage
+* After that go to Admin area -> Appearance -> Widgets
 * In Available Widgets ( left side of the screen ) find AJAX Product Filters
-* Drag it to Sidebar you choose for it
+* Drag it to Sidebar you choose
 * Enter title, choose attribute that will be used for filtering products, choose filter type,
  choose operator( whether product should have all selected values (AND) or one of them (OR) ),
 * Click save and go to your shop to check how it work.
@@ -114,6 +131,13 @@ http://woocommerce-product-filter.berocket.com
 ---
 
 == Changelog ==
+
+= 1.1.0.5 =
+* Enhancement - Option to add text before and after price input fields
+* Enhancement - Jump to first page when filter changed
+* Fix - Now only used values must be shown, not all
+* Fix - Products are limited by category we are in
+* Fix - Products amount on the first page is correct now
 
 = 1.1.0.4 =
 * Minor fix
