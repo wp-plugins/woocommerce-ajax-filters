@@ -1,13 +1,14 @@
 <div class="wrap">
-	<form method="post" action="options.php">
-		<?php
-		settings_fields('br_filters_plugin_options');
-		$options = get_option('br_filters_options');
-		?>
+    <form method="post" action="options.php">
+        <?php
+        settings_fields('br_filters_plugin_options');
+        $options = get_option('br_filters_options');
+        ?>
         <h2 class="nav-tab-wrapper filter_settings_tabs">
             <a href="#general" class="nav-tab nav-tab-active">General</a>
             <a href="#design" class="nav-tab">Design</a>
             <a href="#javascript" class="nav-tab">JavaScript</a>
+            <a href="#customcss" class="nav-tab">Custom CSS</a>
         </h2>
         <div id="general" class="tab-item current">
             <table class="form-table">
@@ -66,7 +67,9 @@
             </table>
         </div>
         <div id="design" class="tab-item">
-            ----
+            <a href="http://berocket.com/product/woocommerce-ajax-products-filter" target="_blank">
+                <img src="<?php echo AAPF_URL; ?>images/paid/styler.png" style="max-width: 100%;" />
+            </a>
         </div>
         <div id="javascript" class="tab-item">
             <table class="form-table">
@@ -96,9 +99,26 @@
                 </tr>
             </table>
         </div>
-		<p class="submit">
-			<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
-		</p>
-	</form>
-    <h4>WooCommerce AJAX Product Filters developed by <a href="http://berocket.com" target="_blank">BeRocket</a></h4>
+        <div id="customcss" class="tab-item">
+            <a href="http://berocket.com/product/woocommerce-ajax-products-filter" target="_blank">
+                <img src="<?php echo AAPF_URL; ?>images/paid/custom_css.png" style="max-width: 100%;" />
+            </a>
+        </div>
+        <p class="submit">
+            <input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
+        </p>
+    </form>
+    <h3>Receive more features and control with Paid version of the plugin:</h3>
+    <ul>
+        <li><b>- Filter by Attribute, Tag and Custom Taxonomy</b></li>
+        <li><b>- Customize filters look through admin</b></li>
+        <li><b>- Filters can be collapsed, option to collapse filter on start</b></li>
+        <li><b>- Price Filter Custom Min and Max values</b></li>
+        <li><b>- Tag Cloud for Tag filter</b></li>
+        <li><b>- Add custom CSS on admin settings page</b></li>
+        <li><b>- Slider can use strings as a value</b></li>
+        <li><b>- And More...</b></li>
+    </ul>
+    <h4>Support the plugin by purchasing paid version. This will provide faster growth, better support and much more functionality for the plugin!</h4>
+    <h4>Both <a href="https://wordpress.org/plugins/woocommerce-ajax-filters/" target="_blank">Free</a> and <a href="http://berocket.com/product/woocommerce-ajax-products-filter" target="_blank">Paid</a> versions of WooCommerce AJAX Product Filters developed by <a href="http://berocket.com" target="_blank">BeRocket</a></h4>
 </div>

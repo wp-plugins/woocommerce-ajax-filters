@@ -3,9 +3,9 @@ Plugin Name: Advanced AJAX Product Filters
 Contributors: dholovnia, berocket
 Donate link: http://berocket.com
 Tags: filters, product filters, ajax product filters, advanced product filters, woocommerce filters, woocommerce product filters, woocommerce ajax product filters, widget, plugin
-Requires at least: 3.9
+Requires at least: 4.0
 Tested up to: 4.2.2
-Stable tag: 1.1.0.5
+Stable tag: 1.1.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -51,14 +51,13 @@ http://woocommerce-product-filter.berocket.com
 
 
 = In recent updates: =
+* Scroll to the top
+* Hash for old browsers added for better support
+* Sort by default WooCommerce value
+* Fixed out-of-stock filter
 * Jump to first page when filter changed
 * Option to add text before and after price input fields
 * Now only used values must be shown, not all
-* Products are limited by category we are in
-* Products amount on the first page fixed
-* Custom CSS class can be added per widget/filter
-* Update button - if added products will be updated only when user click Update button
-* Radio-box can be unselected by clicking it again
 * Minor fixes
 
 
@@ -131,6 +130,12 @@ http://woocommerce-product-filter.berocket.com
 ---
 
 == Changelog ==
+
+= 1.1.0.6 =
+* Enhancement - Scroll to the top
+* Enhancement/Fix - Hash for old browsers added for better support
+* Enhancement/Fix - Sort by default WooCommerce value
+* Fix - out-of-stock filter working correctly
 
 = 1.1.0.5 =
 * Enhancement - Option to add text before and after price input fields

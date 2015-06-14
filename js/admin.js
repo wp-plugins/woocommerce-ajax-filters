@@ -1,1 +1,65 @@
-!function(e){e(document).ready(function(){e(document).on("change",".berocket_aapf_widget_admin_attribute_select",function(){$parent=e(this).parents("form"),"price"==e(this).val()?(e(".berocket_aapf_widget_admin_type_select",$parent).html('<option value="slider">Slider</option>'),e(".berocket_aapf_widget_admin_operator_select",$parent).parent().parent().hide(0)):(e(".berocket_aapf_widget_admin_type_select",$parent).html('<option value="checkbox">Checkbox</option><option value="radio">Radio</option><option value="select">Select</option><option value="slider">Slider</option>'),e(".berocket_aapf_widget_admin_operator_select",$parent).parent().parent().show(0))}),e(document).on("change",".berocket_aapf_widget_admin_type_select",function(){$parent=e(this).parents("form"),"slider"==e(this).val()?e(".berocket_aapf_widget_admin_operator_select",$parent).parent().parent().hide(0):e(".berocket_aapf_widget_admin_operator_select",$parent).parent().parent().show(0)}),e(document).on("click",".berocket_aapf_advanced_settings_pointer",function(t){t.preventDefault(),e(this).parent().next().slideDown(300),e(this).parent().slideUp(200)}),e(".colorpicker_field").each(function(t,a){e(a).css("backgroundColor","#"+e(a).data("color")).next().val(e(a).data("color")),e(a).colpick({layout:"hex",submit:0,color:e(a).data("color"),onChange:function(t,a,n,o,i){e(o).css("backgroundColor","#"+a).next().val(a)}})}),e(".filter_settings_tabs").on("click","a",function(t){t.preventDefault(),$id=e(this).attr("href"),e(".tab-item.current").removeClass("current"),e($id).addClass("current"),e(".filter_settings_tabs .nav-tab").removeClass("nav-tab-active"),e(this).addClass("nav-tab-active")}),e(document).on("change",".berocket_aapf_widget_admin_widget_type_select",function(){"filter"==e(this).val()?e(".berocket_aapf_admin_filter_widget_content").show():"update_button"==e(this).val()?e(".berocket_aapf_admin_filter_widget_content").hide():"selected_area"==e(this).val()&&e(".berocket_aapf_admin_filter_widget_content").hide()})})}(jQuery);
+(function ($) {
+    $(document).ready(function () {
+
+        $(document).on('change', '.berocket_aapf_widget_admin_attribute_select', function () {
+            $parent = $(this).parents('form');
+            if ($(this).val() == 'price') {
+                $('.berocket_aapf_widget_admin_type_select', $parent).html('<option value="slider">Slider</option>');
+                $('.berocket_aapf_widget_admin_operator_select', $parent).parent().parent().hide(0);
+                $('.berocket_aapf_widget_admin_price_attribute', $parent).show(0);
+            } else {
+                $('.berocket_aapf_widget_admin_type_select', $parent).html('<option value="checkbox">Checkbox</option><option value="radio">Radio</option><option value="select">Select</option><option value="slider">Slider</option>');
+                $('.berocket_aapf_widget_admin_operator_select', $parent).parent().parent().show(0);
+                $('.berocket_aapf_widget_admin_price_attribute', $parent).hide(0);
+            }
+        });
+
+        $(document).on('change', '.berocket_aapf_widget_admin_type_select', function () {
+            $parent = $(this).parents('form');
+            if ($(this).val() == 'slider') {
+                $('.berocket_aapf_widget_admin_operator_select', $parent).parent().parent().hide(0);
+            } else {
+                $('.berocket_aapf_widget_admin_operator_select', $parent).parent().parent().show(0);
+            }
+        });
+
+        $(document).on('click', '.berocket_aapf_advanced_settings_pointer', function (event) {
+            event.preventDefault();
+            $(this).parent().next().slideDown(300);
+            $(this).parent().slideUp(200);
+        });
+
+        $('.colorpicker_field').each(function (i,o){
+            $(o).css('backgroundColor', '#'+$(o).data('color')).next().val($(o).data('color'));
+            $(o).colpick({
+                layout: 'hex',
+                submit: 0,
+                color: '#'+$(o).data('color'),
+                onChange: function(hsb,hex,rgb,el,bySetColor) {
+                    $(el).css('backgroundColor', '#'+hex).next().val(hex);
+                }
+            })
+        });
+
+        $('.filter_settings_tabs').on('click', 'a', function (event) {
+            event.preventDefault();
+            $id = $(this).attr('href');
+            $('.tab-item.current').removeClass('current');
+            $($id).addClass('current');
+
+            $('.filter_settings_tabs .nav-tab').removeClass('nav-tab-active');
+            $(this).addClass('nav-tab-active');
+        });
+
+        $(document).on('change', '.berocket_aapf_widget_admin_widget_type_select', function () {
+            $parent = $(this).parents('form');
+            if ( $(this).val() == 'filter' ) {
+                $('.berocket_aapf_admin_filter_widget_content', $parent).show();
+            } else if( $(this).val() == 'update_button' ) {
+                $('.berocket_aapf_admin_filter_widget_content', $parent).hide();
+            } else if( $(this).val() == 'selected_area' ) {
+                $('.berocket_aapf_admin_filter_widget_content', $parent).hide();
+            }
+        });
+    })
+})(jQuery);

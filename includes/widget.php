@@ -41,7 +41,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
      */
     function widget( $args, $instance ) {
         $br_options = apply_filters( 'berocket_aapf_listener_br_options', get_option('br_filters_options') );
-        if( @ $br_options['filters_turn_off'] ) return false;
+        if( @ $br_options['filters_turn_off'] || is_product() ) return false;
 
         global $wp_query, $wp;
 
@@ -79,9 +79,9 @@ class BeRocket_AAPF_Widget extends WP_Widget {
                 'current_page_url'   => preg_replace( "~paged?/[0-9]+/?~", "", home_url( $wp->request ) ),
                 'ajaxurl'            => admin_url( 'admin-ajax.php' ),
                 'product_cat'        => $wp_query_product_cat,
-                'products_holder_id' => $br_options['products_holder_id'],
-                'control_sorting'    => $br_options['control_sorting'],
-                'seo_friendly_urls'  => $br_options['seo_friendly_urls'],
+                'products_holder_id' => @ $br_options['products_holder_id'],
+                'control_sorting'    => @ $br_options['control_sorting'],
+                'seo_friendly_urls'  => @ $br_options['seo_friendly_urls'],
                 'berocket_aapf_widget_product_filters' => $post_temrs,
                 'user_func'          => @ $br_options['user_func'],
             )
@@ -144,7 +144,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
                 $terms = BeRocket_AAPF_Widget::get_attribute_values( $attribute, 'id', true );
             }
 
-            if ( @ count( $terms ) < 2 ) return false;
+            if ( @ count( $terms ) < 1 ) return false;
 
             if ( $wc_order_by == 'menu_order' ) {
                 foreach ( $terms as $term ) {
@@ -174,9 +174,10 @@ class BeRocket_AAPF_Widget extends WP_Widget {
         if( !$scroll_theme ) $scroll_theme = 'dark';
 
         set_query_var( 'operator', $operator );
+        set_query_var( 'type', $type );
         set_query_var( 'title', apply_filters( 'berocket_aapf_widget_title', $title ) );
         set_query_var( 'class', apply_filters( 'berocket_aapf_widget_class', $class ) );
-        set_query_var( 'css_class', apply_filters( 'berocket_aapf_widget_css_class', $css_class ) );
+        set_query_var( 'css_class', apply_filters( 'berocket_aapf_widget_css_class', @ $css_class ) );
         set_query_var( 'style', apply_filters( 'berocket_aapf_widget_style', $style ) );
         set_query_var( 'scroll_theme', $scroll_theme );
         set_query_var( 'x', time() );
@@ -190,6 +191,14 @@ class BeRocket_AAPF_Widget extends WP_Widget {
             $slider_class = 'berocket_filter_slider';
 
             if( $attribute == 'price' ){
+                wp_localize_script(
+                    'berocket_aapf_widget-script',
+                    'br_price_text',
+                    array(
+                        'before'  => @ $text_before_price,
+                        'after'   => @ $text_after_price,
+                    )
+                );
                 if( $price_range ) {
                     foreach ( $price_range as $price ) {
                         if ( $min === false or $min > (int) $price ) {
@@ -200,20 +209,20 @@ class BeRocket_AAPF_Widget extends WP_Widget {
                         }
                     }
                 }
-                $id = rand( 0, time() );
+                $id = 'br_price';
                 $slider_class .= ' berocket_filter_price_slider';
                 $main_class .= ' price';
 
                 $min = number_format( floor( $min ), 2, '.', '' );
                 $max = number_format( ceil( $max ), 2, '.', '' );
-            }else{
-                if( $terms ) {
+            } else {
+                if( @ $terms ) {
                     foreach ( $terms as $term ) {
-                        if ( $min === false or $min > (int) $term->slug ) {
-                            $min = $term->slug;
+                        if ( $min === false or $min > (int) $term->name ) {
+                            $min = floor( (float) $term->name );
                         }
-                        if ( $max === false or $max < (int) $term->slug ) {
-                            $max = $term->slug;
+                        if ( $max === false or $max < (int) $term->name ) {
+                            $max = ceil( (float) $term->name );
                         }
                     }
                 }
@@ -243,7 +252,10 @@ class BeRocket_AAPF_Widget extends WP_Widget {
             set_query_var( 'slider_class', $slider_class );
             set_query_var( 'min', $min );
             set_query_var( 'max', $max );
+            set_query_var( 'text_before_price', @ $text_before_price );
+            set_query_var( 'text_after_price', @ $text_after_price );
         }
+        set_query_var( 'first_page_jump', $first_page_jump );
 
         br_get_template_part( $type );
 
@@ -263,8 +275,11 @@ class BeRocket_AAPF_Widget extends WP_Widget {
     }
 
     public static function get_price_range( $wp_query_product_cat, $woocommerce_hide_out_of_stock_items ){
+        global $wp_query;
         $price_range = array();
+        $wp_query_product_cat_save = $wp_query;
         $products = BeRocket_AAPF_Widget::get_filter_products( $wp_query_product_cat, $woocommerce_hide_out_of_stock_items, false );
+        $wp_query     = $wp_query_product_cat_save;
 
         foreach ( $products as $ID ) {
             $meta_values = get_post_meta( $ID, '_price' );
@@ -282,14 +297,44 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 
     public static function get_attribute_values( $taxonomy = '', $order_by = 'id', $hide_empty = false ) {
         if ( ! $taxonomy ) return array();
-
-        $args = array(
-            'orderby'           => $order_by,
-            'order'             => 'ASC',
-            'hide_empty'        => $hide_empty,
-        );
-
-        return get_terms( $taxonomy, $args );
+        if( $hide_empty ) {
+            global $wp_query, $post;
+            $terms = array();
+            $q_args = $wp_query->query_vars;
+            $q_args['nopaging'] = true;
+            $q_args['post__in'] = '';
+            $q_args['tax_query'] = '';
+            $the_query = new WP_Query($q_args);
+            while ( $the_query -> have_posts() ) {
+                $the_query->the_post();
+                $curent_terms = wp_get_object_terms( $post->ID, $taxonomy);
+                foreach ( $curent_terms as $t ) {
+                    if ( ! in_array($t,$terms) ) {
+                        $terms[] = $t->term_id;
+                    }
+                }
+            }
+            wp_reset_query();
+            $args = array(
+                'orderby'           => $order_by,
+                'order'             => 'ASC',
+                'hide_empty'        => false,
+            );
+            $terms2 = get_terms( $taxonomy, $args );
+            foreach ( $terms2 as $t ) {
+                if ( in_array( $t->term_id, $terms ) ) {
+                    $re[] = $t;
+                }
+            }
+            return $re;
+        } else {
+            $args = array(
+                'orderby'           => $order_by,
+                'order'             => 'ASC',
+                'hide_empty'        => false,
+            );
+            return get_terms( $taxonomy, $args );
+        }
     }
 
     public static function get_filter_products( $wp_query_product_cat, $woocommerce_hide_out_of_stock_items, $use_filters = true ) {
@@ -321,7 +366,7 @@ class BeRocket_AAPF_Widget extends WP_Widget {
         $wp_query = new WP_Query( $args );
 
         // here we get max products to know if current page is not too big
-        if ( $wp_rewrite->using_permalinks() and preg_match( "~/page/([0-9]+)~", $_POST['location'], $mathces ) or preg_match( "~paged?=([0-9]+)~", $_POST['location'], $mathces ) ) {
+        if ( $wp_rewrite->using_permalinks() and preg_match( "~/page/([0-9]+)~", @ $_POST['location'], $mathces ) or preg_match( "~paged?=([0-9]+)~", @ $_POST['location'], $mathces ) ) {
             $args['paged'] = min( $mathces[1], $wp_query->max_num_pages );
             $wp_query = new WP_Query( $args );
         }
@@ -333,6 +378,8 @@ class BeRocket_AAPF_Widget extends WP_Widget {
                 $products[] = get_the_ID();
             }
         }
+
+        wp_reset_query();
 
         return $products;
     }
@@ -349,14 +396,17 @@ class BeRocket_AAPF_Widget extends WP_Widget {
         $instance = $old_instance;
 
         /* Strip tags (if needed) and update the widget settings. */
-        $instance['widget_type'] = strip_tags( $new_instance['widget_type'] );
-        $instance['title'] = strip_tags( $new_instance['title'] );
-        $instance['attribute'] = strip_tags( $new_instance['attribute'] );
-        $instance['type'] = strip_tags( $new_instance['type'] );
-        $instance['product_cat'] = ( $new_instance['product_cat'] ) ? json_encode( $new_instance['product_cat'] ) : '';
-        $instance['scroll_theme'] = strip_tags( $new_instance['scroll_theme'] );
-        $instance['cat_propagation'] = (int) $new_instance['cat_propagation'];
-        $instance['css_class'] = strip_tags( $new_instance['css_class'] );
+        $instance['widget_type']       = strip_tags( $new_instance['widget_type'] );
+        $instance['title']             = strip_tags( $new_instance['title'] );
+        $instance['attribute']         = strip_tags( $new_instance['attribute'] );
+        $instance['type']              = strip_tags( $new_instance['type'] );
+        $instance['product_cat']       = ( $new_instance['product_cat'] ) ? json_encode( $new_instance['product_cat'] ) : '';
+        $instance['scroll_theme']      = strip_tags( $new_instance['scroll_theme'] );
+        $instance['cat_propagation']   = (int) $new_instance['cat_propagation'];
+        $instance['css_class']         = strip_tags( $new_instance['css_class'] );
+        $instance['text_before_price'] = strip_tags( $new_instance['text_before_price'] );
+        $instance['text_after_price']  = strip_tags( $new_instance['text_after_price'] );
+        $instance['first_page_jump']   = (int) $new_instance['first_page_jump'];
 
         if( $new_instance['height'] != 'auto' ) $new_instance['height'] = (float) $new_instance['height'];
         if( !$new_instance['height'] ) $new_instance['height'] = 'auto';
@@ -386,14 +436,16 @@ class BeRocket_AAPF_Widget extends WP_Widget {
 
         /* Set up some default widget settings. */
         $defaults = array(
-            'widget_type' => '',
-            'title' => '',
-            'attribute' => '',
-            'type' => '',
-            'operator' => '',
-            'product_cat' => '',
-            'height' => 'auto',
-            'scroll_theme' => 'dark'
+            'widget_type'       => 'filter',
+            'title'             => '',
+            'attribute'         => 'price',
+            'type'              => 'slider',
+            'operator'          => '',
+            'product_cat'       => '',
+            'text_before_price' => '',
+            'text_after_price'  => '',
+            'height'            => 'auto',
+            'scroll_theme'      => 'dark',
         );
 
         $defaults = apply_filters( 'berocket_aapf_form_defaults', $defaults );

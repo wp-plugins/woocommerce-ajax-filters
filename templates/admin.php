@@ -13,7 +13,7 @@
     <label for="<?php echo $this->get_field_id( 'title' ); ?>">Title: </label>
     <input id="<?php echo $this->get_field_id( 'title' ); ?>" type="text" name="<?php echo $this->get_field_name( 'title' ); ?>" value="<?php echo $instance['title']; ?>" />
 </p>
-<div class="berocket_aapf_admin_filter_widget_content" <?php if ( $instance['widget_type'] == 'update_button' or $instance['widget_type'] == 'selected_area' ) echo 'style="display: none;"'; ?>>
+<div class="berocket_aapf_admin_filter_widget_content" <?php if ( $instance['widget_type'] == 'update_button' or $instance['widget_type'] == 'selected_area' ){ echo 'style="display: none;"';} else { echo 'style="float: none;"'; } ?>>
     <p>
         <label>Attribute:
             <select id="<?php echo $this->get_field_id( 'attribute' ); ?>" name="<?php echo $this->get_field_name( 'attribute' ); ?>" class="berocket_aapf_widget_admin_attribute_select">
@@ -36,6 +36,7 @@
             </select>
         </label>
     </p>
+
     <p <?php if ( $instance['attribute'] == 'price' or $instance['type'] == 'slider' ) echo " style='display: none;'"; ?> >
         <label>Operator:
             <select id="<?php echo $this->get_field_id( 'operator' ); ?>" name="<?php echo $this->get_field_name( 'operator' ); ?>" class="berocket_aapf_widget_admin_operator_select">
@@ -43,6 +44,14 @@
                 <option <?php if ($instance['operator'] == 'OR') echo 'selected'; ?> value="OR">OR</option>
             </select>
         </label>
+    </p>
+    <p <?php if ( $instance['attribute'] != 'price' ) echo " style='display: none;'"; ?> class="berocket_aapf_widget_admin_price_attribute" >
+        <label for="<?php echo $this->get_field_id( 'text_before_price' ); ?>">Text before price: </label>
+        <input id="<?php echo $this->get_field_id( 'text_before_price' ); ?>" type="text" name="<?php echo $this->get_field_name( 'text_before_price' ); ?>" value="<?php echo $instance['text_before_price']; ?>" />
+    </p>
+    <p <?php if ( $instance['attribute'] != 'price' ) echo " style='display: none;'"; ?> class="berocket_aapf_widget_admin_price_attribute" >
+        <label for="<?php echo $this->get_field_id( 'text_after_price' ); ?>">Text after price: </label>
+        <input id="<?php echo $this->get_field_id( 'text_after_price' ); ?>" type="text" name="<?php echo $this->get_field_name( 'text_after_price' ); ?>" value="<?php echo $instance['text_after_price']; ?>" />
     </p>
     <p>
         <a href="#" class='berocket_aapf_advanced_settings_pointer'>Advanced Settings</a>
@@ -98,6 +107,12 @@
                     <option <?php if ($instance['scroll_theme'] == $theme) echo 'selected'; ?>><?php echo $theme; ?></option>
                 <?php endforeach; ?>
             </select>
+        </p>
+        <p>
+            <label>
+                <input type="checkbox" name="<?php echo $this->get_field_name( 'first_page_jump' ); ?>" <?php if ( $instance['first_page_jump'] ) echo 'checked'; ?> value="1" class="berocket_aapf_widget_admin_height_input" />
+                Jump to first page?
+            </label>
         </p>
     </div>
 </div>

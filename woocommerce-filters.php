@@ -1,14 +1,15 @@
 <?php
-/*
-	Plugin Name: Advanced AJAX Product Filters for WooCommerce
-	Plugin URI: http://berocket.com/wp-plugins/product-filters
-	Description: Advanced AJAX Product Filters for WooCommerce
-	Version: 1.1.0.4
-	Author: BeRocket
-	Author URI: http://berocket.com
-*/
+/**
+ * Plugin Name: Advanced AJAX Product Filters for WooCommerce
+ * Plugin URI: http://berocket.com/wp-plugins/product-filters
+ * Description: Advanced AJAX Product Filters for WooCommerce
+ * Version: 1.1.0.6
+ * Author: BeRocket
+ * Author URI: http://berocket.com
+ */
 
 define( "AAPF_TEMPLATE_PATH", plugin_dir_path( __FILE__ ) . "templates/" );
+define( "AAPF_URL", plugin_dir_url( __FILE__ ) );
 
 require_once dirname( __FILE__ ).'/includes/widget.php';
 require_once dirname( __FILE__ ).'/includes/functions.php';
@@ -36,6 +37,7 @@ class BeRocket_AAPF {
         add_action( 'admin_init', array( __CLASS__, 'register_br_options' ) );
 
         add_shortcode( 'br_filters', array( __CLASS__, 'shortcode' ) );
+        add_filter( 'loop_shop_per_page', array( __CLASS__, 'loop_shop_per_page' ), 99 );
 
         if( @ $_GET['filters'] and ! @ defined( 'DOING_AJAX' ) ) {
             add_filter( 'pre_get_posts', array( __CLASS__, 'apply_user_filters' ) );
@@ -52,13 +54,16 @@ class BeRocket_AAPF {
                 'widget_type' => 'filter',
                 'attribute' => '',
                 'type' => 'checkbox',
+                'filter_type' => 'attribute',
                 'operator' => 'OR',
                 'title' => '',
-                'product_cat' => '',
+                'product_cat' => null,
                 'cat_propagation' => '',
                 'height' => 'auto',
                 'scroll_theme' => 'dark',
             ), $atts );
+            if(isset($a['product_cat']))
+                $a['product_cat'] = json_encode(explode("|",$a['product_cat']));
         if ( ! $a['attribute'] || ! $a['type']  ) return false;
 
         $BeRocket_AAPF_Widget = new BeRocket_AAPF_Widget();
@@ -110,29 +115,48 @@ class BeRocket_AAPF {
         global $wpdb;
 
         if ( @ $_POST['limits'] ) {
-            $matched_products = array( 0 );
+            $matched_products = false;
 
             foreach ( $_POST['limits'] as $v ) {
                 $matched_products_query = $wpdb->get_results( $wpdb->prepare("
-		            SELECT DISTINCT ID, post_parent, post_type FROM $wpdb->posts
-					INNER JOIN $wpdb->term_relationships as tr ON ID = tr.object_id
-					INNER JOIN $wpdb->term_taxonomy as tt ON tt.term_taxonomy_id = tr.term_taxonomy_id
-					INNER JOIN $wpdb->terms as t ON t.term_id = tt.term_id
-					WHERE post_type IN ( 'product', 'product_variation' ) AND post_status = 'publish'
-					AND tt.taxonomy = %s AND t.slug BETWEEN %d AND %d
-				", $v[0], $v[1], $v[2] ), OBJECT_K );
+                    SELECT DISTINCT ID, post_parent, post_type FROM $wpdb->posts
+                    INNER JOIN $wpdb->term_relationships as tr ON ID = tr.object_id
+                    INNER JOIN $wpdb->term_taxonomy as tt ON tt.term_taxonomy_id = tr.term_taxonomy_id
+                    INNER JOIN $wpdb->terms as t ON t.term_id = tt.term_id
+                    WHERE post_type IN ( 'product', 'product_variation' ) AND post_status = 'publish'
+                    AND tt.taxonomy = %s AND t.slug BETWEEN %d AND %d
+                ", $v[0], $v[1], $v[2] ), OBJECT_K );
 
                 if ( $matched_products_query ) {
-                    foreach ( $matched_products_query as $product ) {
-                        if ( $product->post_type == 'product' )
-                            $matched_products[] = $product->ID;
-                        if ( $product->post_parent > 0 && ! in_array( $product->post_parent, $matched_products ) )
-                            $matched_products[] = $product->post_parent;
+                    if($matched_products === false)
+                    {
+                        $matched_products = array( 0 );
+                        foreach ( $matched_products_query as $product ) {
+                            if ( $product->post_type == 'product' )
+                                $matched_products[] = $product->ID;
+                            if ( $product->post_parent > 0 && ! in_array( $product->post_parent, $matched_products ) )
+                                $matched_products[] = $product->post_parent;
+                        }
+                    }
+                    else
+                    {
+                        $new_products = array( 0 );
+                        foreach ( $matched_products_query as $product ) {
+                            if ( $product->post_type == 'product' && in_array($product->ID, $matched_products))
+                                $new_products[] = $product->ID;
+                            if ( $product->post_parent > 0 && ! in_array( $product->post_parent, $matched_products ) && in_array($product->post_parent, $matched_products))
+                                $new_products[] = $product->post_parent;
+                        }
+                        $matched_products = $new_products;
                     }
                 }
             }
+            if($matched_products === false)
+            {
+                $matched_products = array( 0 );
+            }
 
-            $matched_products = array_unique( $matched_products );
+            $matched_products = @ array_unique( $matched_products );
 
             // Filter the id's
             if ( sizeof( $filtered_posts ) == 0) {
@@ -150,14 +174,14 @@ class BeRocket_AAPF {
 
         if ( @ $_POST['price'] ) {
             $matched_products = array( 0 );
-            $min 	= floatval( $_POST['price'][0] );
-            $max 	= floatval( $_POST['price'][1] );
+            $min     = floatval( $_POST['price'][0] );
+            $max     = floatval( $_POST['price'][1] );
 
             $matched_products_query = apply_filters( 'woocommerce_price_filter_results', $wpdb->get_results( $wpdb->prepare("
-	        	SELECT DISTINCT ID, post_parent, post_type FROM $wpdb->posts
-				INNER JOIN $wpdb->postmeta ON ID = post_id
-				WHERE post_type IN ( 'product', 'product_variation' ) AND post_status = 'publish' AND meta_key = %s AND meta_value BETWEEN %d AND %d
-			", '_price', $min, $max ), OBJECT_K ), $min, $max );
+                SELECT DISTINCT ID, post_parent, post_type FROM $wpdb->posts
+                INNER JOIN $wpdb->postmeta ON ID = post_id
+                WHERE post_type IN ( 'product', 'product_variation' ) AND post_status = 'publish' AND meta_key = %s AND meta_value BETWEEN %d AND %d
+            ", '_price', $min, $max ), OBJECT_K ), $min, $max );
 
             if ( $matched_products_query ) {
                 foreach ( $matched_products_query as $product ) {
@@ -214,8 +238,8 @@ class BeRocket_AAPF {
     }
 
     public static function br_add_defaults(){
-        $tmp = get_option('br_filters_options');
-        if( @$tmp['chk_default_options_db'] == '1' or ! @is_array( $tmp ) ){
+        $tmp = get_option( 'br_filters_options' );
+        if( @ $tmp['chk_default_options_db'] == '1' or ! @ is_array( $tmp ) ){
             delete_option( 'br_filters_options' );
             update_option( 'br_filters_options', BeRocket_AAPF::$defaults );
         }
@@ -223,6 +247,10 @@ class BeRocket_AAPF {
 
     public static function br_delete_plugin_options(){
         delete_option( 'br_filters_options' );
+    }
+
+    public static function loop_shop_per_page() {
+        return get_option( 'posts_per_page' );
     }
 
 }
