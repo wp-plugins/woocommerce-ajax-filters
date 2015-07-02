@@ -5,7 +5,7 @@ Donate link: http://berocket.com
 Tags: filters, product filters, ajax product filters, advanced product filters, woocommerce filters, woocommerce product filters, woocommerce ajax product filters, widget, plugin
 Requires at least: 4.0
 Tested up to: 4.2.2
-Stable tag: 1.1.0.7
+Stable tag: 1.1.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -138,6 +138,9 @@ http://woocommerce-product-filter.berocket.com
 ---
 
 == Changelog ==
+
+= 1.1.0.8 =
+* Fix - removing PHP 5.5 code
 
 = 1.1.0.7 =
 * Enhancement - Option to hide selected values and/or without products. Add at the bottom button to show them
