@@ -5,7 +5,7 @@ Donate link: http://berocket.com
 Tags: filters, product filters, ajax product filters, advanced product filters, woocommerce filters, woocommerce product filters, woocommerce ajax product filters, widget, plugin
 Requires at least: 4.0
 Tested up to: 4.2.2
-Stable tag: 1.1.0.6
+Stable tag: 1.1.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,14 +30,22 @@ WooCommerce AJAX Product Filters - advanced AJAX product filters plugin for WooC
 
 = Additional Features in Paid Plugin: =
 
-* Filter by Attribute, Tag and Custom Taxonomy
+* Filter by Attribute, Tag, Custom Taxonomy, Color, Sub-categories and Availability( in stock | out of stock | any )
 * Customize filters look through admin
+* Option to re-count products amount in values when some value selected
 * Tag Cloud for Tag filter
+* Description can be added for the attributes
 * Slider can use strings as a value
 * Filters can be collapsed by clicking on title, option to collapse filter on start
 * Price Filter Custom Min and Max values
 * Add custom CSS on admin settings page
-* And More...
+* Show icons before/after widget title and/or before/after values
+* Option to upload "Loading..." gif image and set label after/before/above/under it
+* Show icons before/after widget title and/or before/after values
+* Scroll top position can be controlled by the admin
+* Option to hide on mobile devices
+* Much better support for custom theme
+* Enhancements of the free features
 
 = Paid Plugin Link =
 http://berocket.com/product/woocommerce-ajax-products-filter
@@ -130,6 +138,14 @@ http://woocommerce-product-filter.berocket.com
 ---
 
 == Changelog ==
+
+= 1.1.0.7 =
+* Enhancement - Option to hide selected values and/or without products. Add at the bottom button to show them
+* Enhancement - Filters are using product variations now
+* Enhancement - translation( WPML ) support
+* Enhancement/Fix - radio-box had issues and there was no chance to remove selection
+* Fix - Pagination has issues with link building
+* Fix - Jump to first page wasn't working correctly and jump each time even when user want to change page
 
 = 1.1.0.6 =
 * Enhancement - Scroll to the top
