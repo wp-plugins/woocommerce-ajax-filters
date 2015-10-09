@@ -139,7 +139,7 @@ http://woocommerce-product-filter.berocket.com
 
 == Changelog ==
 
-= 1.1.1 =
+= 1.1.2 =
 * Fix - most of the bugs from support forum
 
 = 1.1.1 =
